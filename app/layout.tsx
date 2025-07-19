@@ -1,5 +1,6 @@
 import './globals.css'
 import React from 'react'
+import Header from '../components/Header'
 
 export const metadata = {
   title: 'BeatsMarket - La plateforme mondiale des beats',
@@ -13,8 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="bg-darkbg text-white font-poppins">
-        {children}
+      <body className="bg-darkbg text-white font-poppins flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">{children}</main>
       </body>
     </html>
   )

@@ -1,4 +1,6 @@
 import React from "react"
+import { StatusBadge } from "@/components/ui/status-badge"
+import { ActionMenu } from "@/components/ui/action-menu"
 
 type Artist = {
   id: string
@@ -16,6 +18,18 @@ const dummyArtists: Artist[] = [
 ]
 
 export default function AdminArtistsPage() {
+  const handleEdit = (id: string) => {
+    alert(`Éditer artiste ${id}`)
+  }
+  const handleSuspend = (id: string) => {
+    alert(`Suspendre artiste ${id}`)
+  }
+  const handleDelete = (id: string) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet artiste ? Cette action est irréversible.")) {
+      alert(`Artiste ${id} supprimé`)
+    }
+  }
+
   return (
     <section className="min-h-screen bg-darkbg px-6 py-12 text-white font-poppins">
       <h1 className="text-4xl font-bold text-primary mb-8">Gestion des Artistes</h1>
@@ -43,7 +57,11 @@ export default function AdminArtistsPage() {
                 <td className="px-4 py-3">{a.purchasesCount}</td>
                 <td className="px-4 py-3">{a.totalSpent.toFixed(2)}</td>
                 <td className="px-4 py-3">
-                  <ActionMenu artistId={a.id} />
+                  <ActionMenu
+                    onEdit={() => handleEdit(a.id)}
+                    onBan={() => handleSuspend(a.id)}
+                    onDelete={() => handleDelete(a.id)}
+                  />
                 </td>
               </tr>
             ))}
@@ -51,29 +69,5 @@ export default function AdminArtistsPage() {
         </table>
       </div>
     </section>
-  )
-}
-
-function StatusBadge({ status }: { status: Artist["status"] }) {
-  let color = "bg-gray-500"
-  if (status === "actif") color = "bg-green-600"
-  else if (status === "en attente") color = "bg-yellow-500"
-  else if (status === "banni") color = "bg-red-600"
-
-  return (
-    <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${color}`}>
-      {status.toUpperCase()}
-    </span>
-  )
-}
-
-function ActionMenu({ artistId }: { artistId: string }) {
-  return (
-    <div>
-      {/* Ici un menu déroulant avec actions comme Editer, Suspendre, Supprimer */}
-      <button className="bg-primary px-3 py-1 rounded hover:bg-primary/80 text-sm font-semibold">
-        Actions
-      </button>
-    </div>
   )
 }

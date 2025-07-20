@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function PricingPage() {
-  // Données Plans Beatmakers
   const plans = [
     {
       name: "Gratuit",
@@ -73,7 +72,6 @@ export default function PricingPage() {
     },
   ]
 
-  // Licences sans prix (les beatmakers fixent leurs prix)
   const licenses = [
     {
       name: "Licence Basique MP3",
@@ -107,6 +105,14 @@ export default function PricingPage() {
       rights:
         "Exclusivité complète sauf revente. Aucune redistribution du beat autorisée.",
     },
+  ]
+
+  // Données mises en avant
+  const promotions = [
+    { duration: "1 jour", price: "1 €" },
+    { duration: "1 semaine", price: "3 €" },
+    { duration: "2 semaines", price: "5 €" },
+    { duration: "1 mois", price: "8 €" },
   ]
 
   return (
@@ -151,6 +157,28 @@ export default function PricingPage() {
           </div>
         </section>
 
+        {/* Mises en avant & tarifs */}
+        <section id="promotions" className="w-full max-w-5xl mx-auto px-4 border-t border-white/10 pt-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-8 text-center">
+            Mises en avant et tarifs
+          </h2>
+          <p className="text-center text-white/80 mb-6 max-w-3xl mx-auto">
+            Augmentez la visibilité de vos beats ou de votre boutique avec nos offres de mises en avant.
+            Les durées sont cumulables et renouvelables chaque mois.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 max-w-md mx-auto">
+            {promotions.map(({ duration, price }, i) => (
+              <div
+                key={i}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 text-white shadow-md backdrop-blur-sm text-center"
+              >
+                <p className="text-lg font-semibold">{duration}</p>
+                <p className="text-pink-500 text-2xl font-bold">{price}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Licences disponibles */}
         <section
           id="licenses"
@@ -184,4 +212,38 @@ export default function PricingPage() {
 
         {/* Services IA à la carte */}
         <section className="mt-20 w-full max-w-5xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold mb
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">
+            Services IA à la carte
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-pink-600 bg-zinc-900 p-6 shadow-lg">
+              <h3 className="text-xl font-semibold text-white mb-2">🎛️ Mastering IA</h3>
+              <p className="text-zinc-300 mb-2">
+                Obtiens un mastering professionnel de ton beat ou de ton morceau en quelques secondes.
+              </p>
+              <ul className="text-zinc-400 text-sm list-disc ml-4">
+                <li>Qualité studio</li>
+                <li>Analyse intelligente de la dynamique et des fréquences</li>
+                <li>Export WAV 24 bits</li>
+              </ul>
+              <p className="mt-4 text-pink-500 font-medium">Disponible même pour les comptes gratuits</p>
+            </div>
+
+            <div className="rounded-2xl border border-pink-600 bg-zinc-900 p-6 shadow-lg">
+              <h3 className="text-xl font-semibold text-white mb-2">🖼️ Cover IA</h3>
+              <p className="text-zinc-300 mb-2">
+                Génère une pochette d’album ou de single unique, avec intelligence artificielle.
+              </p>
+              <ul className="text-zinc-400 text-sm list-disc ml-4">
+                <li>Choix du style, ambiance, couleurs</li>
+                <li>Résolution haute qualité 3000x3000px</li>
+                <li>Prête pour Spotify, Apple Music, etc.</li>
+              </ul>
+              <p className="mt-4 text-pink-500 font-medium">Inclus dès le plan gratuit</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  )
+}

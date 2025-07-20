@@ -1,34 +1,26 @@
-import React from "react";
-import { Badge } from "./badge";
-
-type Status = "pending" | "approved" | "rejected" | "draft";
+import React from "react"
+import { cn } from "@/lib/utils"
 
 interface StatusBadgeProps {
-  status: Status;
+  status: "actif" | "en attente" | "suspendu" | "supprimé"
 }
 
-export function StatusBadge({ status }: StatusBadgeProps) {
-  let variant: Parameters<typeof Badge>[0]["variant"] = "default";
-  let text = "";
+const statusColors: Record<StatusBadgeProps["status"], string> = {
+  actif: "bg-green-500 text-white",
+  "en attente": "bg-yellow-400 text-black",
+  suspendu: "bg-red-500 text-white",
+  supprimé: "bg-gray-500 text-white",
+}
 
-  switch (status) {
-    case "pending":
-      variant = "pink";
-      text = "En attente";
-      break;
-    case "approved":
-      variant = "default";
-      text = "Approuvé";
-      break;
-    case "rejected":
-      variant = "destructive";
-      text = "Rejeté";
-      break;
-    case "draft":
-      variant = "outline";
-      text = "Brouillon";
-      break;
-  }
-
-  return <Badge variant={variant}>{text}</Badge>;
+export default function StatusBadge({ status }: StatusBadgeProps) {
+  return (
+    <span
+      className={cn(
+        "px-3 py-1 text-xs font-semibold rounded-full",
+        statusColors[status]
+      )}
+    >
+      {status}
+    </span>
+  )
 }

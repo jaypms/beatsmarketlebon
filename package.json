@@ -1,21 +1,16 @@
 {
   "name": "beatsmarket",
   "version": "1.0.0",
-  "description": "Projet BeatsMarket",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "generate-ui-index": "node hub/generate-ui-index.js",
-    "watch-ui-index": "nodemon --watch src/components/ui --ext tsx --exec \"npm run generate-ui-index\"",
-    "start": "next start",
     "dev": "next dev",
-    "build": "next build"
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "next": "^13.4.7"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@shadcn/ui": "^1.0.0",
+    "next": "13.4.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }

@@ -1,26 +1,25 @@
-# Composants UI de BeatsMarket
+# Bibliothèque de composants UI - BeatsMarket
 
-Voici la liste des composants UI disponibles dans ce dossier, avec leur usage.
+Ce dossier contient tous les composants UI réutilisables pour BeatsMarket.
 
-- **Accordion** : Affiche des sections repliables.
+## Liste des composants
+
+- **Accordion** : Section repliable (accordéon).
 - **ActionMenu** : Menu d’actions déroulant.
-- **Badge** : Petit badge pour afficher un statut.
-- **Bouton** : Bouton avec variantes.
-- **Card** : Carte visuelle contenant des infos.
-- **DropDownMenu** : Menu déroulant multi-options.
-- **Input** : Champ texte de formulaire.
+- **Badge** : Petit badge coloré pour statuts ou labels.
+- **Button** : Bouton avec variantes (default, destructive, ghost...).
+- **Card** : Carte d’affichage avec header, content, footer.
+- **DropdownMenu** : Menu déroulant complexe avec sous-menus.
+- **Input** : Champ de saisie simple.
 - **Label** : Étiquette pour champ formulaire.
-- **StadCard** : Carte statistique (KPI).
-- **StatutBadge** : Badge pour statuts dynamiques.
-- **Textarea** : Zone de texte multi-lignes.
+- **StatCard** : Carte de statistiques (KPI).
+- **StatusBadge** : Badge indiquant un statut (actif, suspendu...).
+- **Textarea** : Zone de texte multilignes.
+- **Tooltip** : Info-bulle affichée au survol.
 
----
+## Importer les composants
 
-## Exemple d’utilisation
+Grâce au fichier `index.ts`, tu peux importer les composants ainsi :
 
 ```tsx
-import { Button } from "./button"
-
-export function Exemple() {
-  return <Button variant="default">Cliquez-moi</Button>
-}
+import { Button, Card, Tooltip } from "@/components/ui"

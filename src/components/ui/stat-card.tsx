@@ -1,24 +1,20 @@
-"use client"
-
-import React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import React from "react";
 
 interface StatCardProps {
-  title: string
-  value: string | number
-  icon?: React.ReactNode
+  title: string;
+  value: string | number;
+  icon?: React.ReactNode;
+  className?: string;
 }
 
-export function StatCard({ title, value, icon }: StatCardProps) {
+export function StatCard({ title, value, icon, className }: StatCardProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex items-center justify-between">
-        <p className="text-3xl font-bold">{value}</p>
-        {icon && <div className="text-primary">{icon}</div>}
-      </CardContent>
-    </Card>
-  )
+    <div className={`bg-gray-800 p-4 rounded-md shadow-md flex items-center space-x-4 ${className}`}>
+      {icon && <div className="text-pink-500">{icon}</div>}
+      <div>
+        <p className="text-sm text-gray-400">{title}</p>
+        <p className="text-2xl font-bold text-white">{value}</p>
+      </div>
+    </div>
+  );
 }

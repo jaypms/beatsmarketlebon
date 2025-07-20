@@ -67,7 +67,6 @@ export default function SuperAdminPage() {
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100">
-      {/* Sidebar */}
       <aside
         className={`${
           sidebarOpen ? "w-64" : "w-16"
@@ -81,86 +80,4 @@ export default function SuperAdminPage() {
             className="text-gray-400 hover:text-gray-200 focus:outline-none"
           >
             {sidebarOpen ? "«" : "»"}
-          </button>
-        </div>
-        <nav className="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-          <a
-            href="/admin/superadmin"
-            className="block px-3 py-2 rounded hover:bg-gray-700"
-          >
-            Dashboard
-          </a>
-          <a
-            href="/admin/beatmakers"
-            className="block px-3 py-2 rounded hover:bg-gray-700"
-          >
-            Beatmakers
-          </a>
-          <a
-            href="/admin/artists"
-            className="block px-3 py-2 rounded hover:bg-gray-700"
-          >
-            Artistes
-          </a>
-          <a
-            href="/admin/settings"
-            className="block px-3 py-2 rounded hover:bg-gray-700"
-          >
-            Paramètres
-          </a>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="flex items-center justify-between bg-gray-800 px-6 py-4 border-b border-gray-700">
-          <h2 className="text-2xl font-semibold">Tableau de bord SuperAdmin</h2>
-          <button className="bg-pink-600 px-4 py-2 rounded hover:bg-pink-700">
-            Déconnexion
-          </button>
-        </header>
-
-        {/* Content */}
-        <section className="flex-1 p-6 overflow-auto flex flex-col">
-          <div className="flex-1 overflow-y-auto mb-4">
-            {messages.length === 0 && (
-              <p className="text-gray-400">Bienvenue dans l’assistant IA.</p>
-            )}
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`mb-2 max-w-xs px-3 py-2 rounded ${
-                  msg.sender === "admin"
-                    ? "bg-pink-600 self-end text-white"
-                    : "bg-gray-700 self-start text-gray-200"
-                }`}
-              >
-                {msg.text}
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="flex">
-            <textarea
-              className="flex-1 resize-none rounded bg-gray-800 p-2 text-white focus:outline-none"
-              rows={2}
-              placeholder="Tapez un message, puis Entrée..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <button
-              onClick={sendMessage}
-              className="ml-2 bg-pink-600 px-4 py-2 rounded hover:bg-pink-700"
-              aria-label="Envoyer message"
-            >
-              Envoyer
-            </button>
-          </div>
-        </section>
-      </main>
-    </div>
-  );
-}
+          </button

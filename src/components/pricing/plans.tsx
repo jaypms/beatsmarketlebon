@@ -1,11 +1,4 @@
-"use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Check, Crown } from "lucide-react";
-
-const plans = [
+export const plans = [
   {
     name: "Gratuit",
     price: "0 €",
@@ -81,68 +74,78 @@ const plans = [
   },
 ];
 
-export function PricingPlans() {
-  const [selected, setSelected] = useState<number | null>(null);
+export const licenses = [
+  {
+    name: "Licence Basique (MP3)",
+    target: "Artistes débutants, maquettes",
+    files: "1 fichier MP3 (avec tag vocal)",
+    rights:
+      "Usage non-commercial, streams et ventes limités à 5 000 streams et 100 ventes maximum",
+  },
+  {
+    name: "Licence Premium (WAV)",
+    target: "Artistes indépendants pour plateformes de streaming",
+    files: "1 MP3 + 1 WAV (haute qualité, sans tag)",
+    rights:
+      "Usage commercial avec limites élevées : jusqu'à 100 000 streams et 5 000 ventes",
+  },
+  {
+    name: "Licence Exclusive",
+    target: "Artistes signés, projets majeurs",
+    files: "MP3 + WAV",
+    rights:
+      "Droits illimités, le beat est retiré de la vente après achat. Usage commercial complet.",
+  },
+  {
+    name: "Licence Exclusive + Pistes (Stems)",
+    target: "Pack ultime, contrôle total",
+    files: "MP3 + WAV + pistes séparées",
+    rights:
+      "Même droits qu'Exclusive, avec accès aux pistes multipistes (stems) pour remix, mastering, etc.",
+  },
+];
 
-  return (
-    <section className="text-white px-4 py-8 max-w-7xl mx-auto">
-      <h2 className="text-4xl font-bold mb-10 text-center">Plans Beatmaker</h2>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-        {plans.map((plan, idx) => (
-          <div
-            key={plan.name}
-            className={`rounded-3xl p-6 border flex flex-col justify-between ${
-              plan.highlighted
-                ? "border-pink-600 bg-gradient-to-br from-pink-900/50 to-pink-700/20 shadow-lg"
-                : "border-white/20 bg-white/5"
-            }`}
-          >
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-2xl font-semibold">{plan.name}</h3>
-                {plan.highlighted && <Crown className="text-yellow-400" />}
-              </div>
-              <p className="text-3xl font-extrabold mb-2">{plan.price}</p>
-              <p className="italic text-sm mb-1">Commission sur les ventes : {plan.commission}</p>
-              <p className="italic text-sm mb-4">{plan.beatLimit}</p>
-
-              <ul className="space-y-2 text-sm">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-400" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  className="mt-6 w-full"
-                  variant={plan.highlighted ? "default" : "secondary"}
-                  onClick={() => setSelected(idx)}
-                >
-                  Choisir ce plan
-                </Button>
-              </DialogTrigger>
-
-              <DialogContent className="max-w-md bg-[#111] border border-white/20 text-white rounded-xl">
-                <h3 className="text-xl font-bold mb-4">Confirmer le plan {plan.name}</h3>
-                <p className="mb-6">
-                  Vous êtes sur le point de souscrire au plan <strong>{plan.name}</strong>. Voulez-vous continuer ?
-                </p>
-                <div className="flex justify-end gap-4">
-                  <Button variant="ghost" onClick={() => setSelected(null)}>
-                    Annuler
-                  </Button>
-                  <Button onClick={() => setSelected(null)}>Confirmer</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+export const services = [
+  {
+    name: "Mises en avant (Beat ou Boutique)",
+    description: "Augmente la visibilité sur le site",
+    prices: [
+      { duration: "1 Jour", price: "1 €" },
+      { duration: "1 Semaine", price: "3 €" },
+      { duration: "2 Semaines", price: "5 €" },
+      { duration: "1 Mois", price: "8 €" },
+    ],
+  },
+  {
+    name: "Mastering IA",
+    description: "Améliore le son d'un morceau",
+    prices: [
+      { formula: "Essentiel (2 retouches)", price: "12 €" },
+      { formula: "Pro (5 retouches)", price: "22 €" },
+    ],
+  },
+  {
+    name: "Cover IA",
+    description: "Génère une pochette unique",
+    prices: [
+      { formula: "Essentiel (2 retouches)", price: "12 €" },
+      { formula: "Pro (5 retouches)", price: "22 €" },
+    ],
+  },
+  {
+    name: "Distribution Digitale",
+    description: "Publie la musique sur les plateformes de streaming",
+    prices: [
+      { type: "Single", price: "14,90 €" },
+      { type: "Album / EP", price: "38,90 €" },
+    ],
+  },
+  {
+    name: "Gestion des Droits Musicaux",
+    description: "Collecte les royalties pour les créateurs",
+    prices: [
+      { fee: "Frais d'inscription", price: "0 €" },
+      { fee: "Commission", price: "25% sur les droits perçus" },
+    ],
+  },
+];

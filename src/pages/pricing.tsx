@@ -1,5 +1,6 @@
 import React from "react"
 import PricingPlan from "@/components/PricingPlan"
+import Footer from "@/components/Footer"
 
 const plans = [
   {
@@ -84,3 +85,176 @@ const licenses = [
     files: "1 fichier MP3 (avec tag vocal)",
     rights:
       "Usage non-commercial, streams et ventes limités à 5 000 streams et 100 ventes maximum",
+  },
+  {
+    name: "Licence Premium (WAV)",
+    target: "Artistes indépendants pour plateformes de streaming",
+    files: "1 MP3 + 1 WAV (haute qualité, sans tag)",
+    rights:
+      "Usage commercial avec limites élevées : jusqu'à 100 000 streams et 5 000 ventes",
+  },
+  {
+    name: "Licence Exclusive",
+    target: "Artistes signés, projets majeurs",
+    files: "MP3 + WAV",
+    rights:
+      "Droits illimités, le beat est retiré de la vente après achat. Usage commercial complet.",
+  },
+  {
+    name: "Licence Exclusive + Pistes (Stems)",
+    target: "Pack ultime, contrôle total",
+    files: "MP3 + WAV + pistes séparées",
+    rights:
+      "Même droits qu'Exclusive, avec accès aux pistes multipistes (stems) pour remix, mastering, etc.",
+  },
+]
+
+const services = [
+  {
+    name: "Mises en avant (Beat ou Boutique)",
+    description: "Augmente la visibilité sur le site",
+    prices: [
+      { duration: "1 Jour", price: "1 €" },
+      { duration: "1 Semaine", price: "3 €" },
+      { duration: "2 Semaines", price: "5 €" },
+      { duration: "1 Mois", price: "8 €" },
+    ],
+  },
+  {
+    name: "Mastering IA",
+    description: "Améliore le son d'un morceau",
+    prices: [
+      { formula: "Essentiel (2 retouches)", price: "12 €" },
+      { formula: "Pro (5 retouches)", price: "22 €" },
+    ],
+  },
+  {
+    name: "Cover IA",
+    description: "Génère une pochette unique",
+    prices: [
+      { formula: "Essentiel (2 retouches)", price: "12 €" },
+      { formula: "Pro (5 retouches)", price: "22 €" },
+    ],
+  },
+  {
+    name: "Distribution Digitale",
+    description: "Publie la musique sur les plateformes de streaming",
+    prices: [
+      { type: "Single", price: "14,90 €" },
+      { type: "Album / EP", price: "38,90 €" },
+    ],
+  },
+  {
+    name: "Gestion des Droits Musicaux",
+    description: "Collecte les royalties pour les créateurs",
+    prices: [
+      { fee: "Frais d'inscription", price: "0 €" },
+      { fee: "Commission", price: "25% sur les droits perçus" },
+    ],
+  },
+]
+
+export default function Pricing() {
+  return (
+    <>
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <h1 className="text-4xl font-extrabold mb-8 text-center">Nos offres</h1>
+
+        {/* Plans */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
+          {plans.map((plan) => {
+            const supportFeature = plan.features.find((f) =>
+              f.toLowerCase().includes("support")
+            ) || "Support non défini"
+
+            const masteringCoverIA = plan.features.some((f) =>
+              f.toLowerCase().includes("mastering ia")
+            )
+            const statsAvancees = plan.features.some((f) =>
+              f.toLowerCase().includes("statistiques avancées")
+            )
+
+            const miseEnAvantBeat = plan.features.some((f) =>
+              f.toLowerCase().includes("mise en avant de beat")
+            )
+              ? 1
+              : 0
+            const miseEnAvantBoutique = plan.features.some((f) =>
+              f.toLowerCase().includes("mise en avant de boutique")
+            )
+              ? 1
+              : 0
+
+            return (
+              <PricingPlan
+                key={plan.name}
+                name={plan.name}
+                price={plan.price}
+                commission={plan.commission}
+                beatsLimit={plan.beatLimit}
+                support={supportFeature}
+                masteringCoverIA={masteringCoverIA}
+                statsAvancees={statsAvancees}
+                miseEnAvantBeat={miseEnAvantBeat}
+                miseEnAvantBoutique={miseEnAvantBoutique}
+                description={plan.features.join(", ")}
+              />
+            )
+          })}
+        </div>
+
+        {/* Licences */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6 text-center">Nos licences</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {licenses.map((lic) => (
+              <div
+                key={lic.name}
+                className="border border-gray-700 rounded-lg p-6 shadow hover:shadow-lg transition-shadow duration-300 bg-gray-900"
+              >
+                <h3 className="text-xl font-semibold mb-2">{lic.name}</h3>
+                <p className="italic text-sm mb-2">{lic.target}</p>
+                <p><strong>Fichiers fournis :</strong> {lic.files}</p>
+                <p className="mt-2 text-gray-400 text-sm">{lic.rights}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Services */}
+        <section>
+          <h2 className="text-3xl font-bold mb-6 text-center">Nos services</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {services.map((service) => (
+              <div
+                key={service.name}
+                className="border border-gray-700 rounded-lg p-6 shadow hover:shadow-lg transition-shadow duration-300 bg-gray-900"
+              >
+                <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
+                <p className="mb-3">{service.description}</p>
+                <ul className="list-disc list-inside text-sm text-gray-400">
+                  {service.prices.map((priceItem, idx) => {
+                    const labelKey = Object.keys(priceItem).find((k) => k !== "price")
+                    const labelValue = labelKey ? (priceItem as any)[labelKey] : ""
+                    return (
+                      <li key={idx}>
+                        {labelValue ? (
+                          <>
+                            <strong>{labelValue} :</strong> {priceItem.price}
+                          </>
+                        ) : (
+                          priceItem.price
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  )
+}

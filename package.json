@@ -4,7 +4,8 @@
   "description": "Projet BeatsMarket",
   "main": "index.js",
   "scripts": {
-    "generate-ui-index": "node generate-ui-index.js",
+    "generate-ui-index": "node hub/generate-ui-index.js",
+    "watch-ui-index": "nodemon --watch src/components/ui --ext tsx --exec \"npm run generate-ui-index\"",
     "start": "next start",
     "dev": "next dev",
     "build": "next build"
@@ -14,5 +15,7 @@
     "react-dom": "^18.2.0",
     "next": "^13.4.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }

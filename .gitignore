@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Fichier d'environnement local (clé API)
+.env.local
+
+# Next.js build output
+.next/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers système
+.DS_Store
+Thumbs.db

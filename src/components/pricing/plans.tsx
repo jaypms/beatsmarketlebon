@@ -8,29 +8,39 @@ import { Check, Crown } from "lucide-react";
 const plans = [
   {
     name: "Gratuit",
-    price: "0€",
+    price: "0 €",
+    commission: "35%",
+    beatLimit: "Jusqu'à 10 beats",
     features: [
-      "1 beat en ligne",
-      "Vente avec licence MP3 uniquement",
+      "Support de base",
+      "Vente de toutes les licences disponibles",
       "Pas d'accès aux services IA",
+      "Statistiques de base",
     ],
     highlighted: false,
   },
   {
     name: "Bronze",
-    price: "10€ / mois",
+    price: "10 € / mois",
+    commission: "20%",
+    beatLimit: "Jusqu'à 30 beats",
     features: [
-      "10 beats en ligne",
+      "Support développé",
+      "Accès au mastering IA et cover IA",
+      "Statistiques avancées",
       "Vente MP3 & WAV",
-      "Accès au mastering IA",
     ],
     highlighted: false,
   },
   {
     name: "Or",
-    price: "15€ / mois",
+    price: "15 € / mois",
+    commission: "15%",
+    beatLimit: "Jusqu'à 50 beats",
     features: [
-      "50 beats en ligne",
+      "Support développé",
+      "Accès au mastering IA et cover IA",
+      "Statistiques avancées",
       "Vente MP3, WAV & Stems",
       "Mastering + Covers IA",
     ],
@@ -38,21 +48,27 @@ const plans = [
   },
   {
     name: "Diamant",
-    price: "20€ / mois",
+    price: "20 € / mois",
+    commission: "10%",
+    beatLimit: "Jusqu'à 100 beats",
     features: [
-      "Beats illimités",
-      "Vente exclusive autorisée",
-      "Mastering, Covers & Boosts",
+      "Support développé",
+      "Statistiques avancées",
+      "1 mise en avant de beat par semaine (1x par mois)",
+      "1 mise en avant de boutique par semaine (1x par mois)",
     ],
     highlighted: false,
   },
   {
     name: "Diamant Plus",
-    price: "29,90€ / mois",
+    price: "29 € / mois",
+    commission: "0%",
+    beatLimit: "Beats illimités",
     features: [
-      "Boosts + Offres personnalisées",
-      "Suivi dédié",
-      "Préparation catalogue Believe",
+      "Support développé",
+      "Statistiques avancées",
+      "2 mises en avant de beat par semaine (1x par mois)",
+      "2 mises en avant de boutique par semaine (1x par mois)",
     ],
     highlighted: false,
   },
@@ -79,7 +95,9 @@ export function PricingPlans() {
                 <h3 className="text-xl font-semibold">{plan.name}</h3>
                 {plan.highlighted && <Crown className="text-yellow-400" />}
               </div>
-              <p className="text-2xl font-bold my-4">{plan.price}</p>
+              <p className="text-2xl font-bold my-2">{plan.price}</p>
+              <p className="text-sm italic mb-1">Commission sur les ventes : {plan.commission}</p>
+              <p className="text-sm italic mb-4">{plan.beatLimit}</p>
               <ul className="space-y-2 text-sm">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2">
@@ -104,8 +122,7 @@ export function PricingPlans() {
                   Confirmer le plan {plan.name}
                 </h3>
                 <p className="mb-6">
-                  Souhaitez-vous souscrire à l’offre <strong>{plan.name}</strong> ?
-                  Cela activera automatiquement les avantages liés à ce plan.
+                  Souhaitez-vous souscrire à l’offre <strong>{plan.name}</strong> ? Cela activera automatiquement les avantages liés à ce plan.
                 </p>
                 <div className="flex justify-end gap-2">
                   <Button variant="ghost" onClick={() => setSelected(null)}>

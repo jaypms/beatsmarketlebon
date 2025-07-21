@@ -1,10 +1,15 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['yourdomain.com'], // ajoute ici les domaines autorisés pour les images (CDN, etc.)
+// next.config.js
+module.exports = {
+  webpackDevMiddleware: config => {
+    config.watchOptions = {
+      poll: 1000,               // forcer le polling, important sous Termux
+      ignored: [
+        '**/node_modules',
+        '**/.next',
+        '/data/**',             // ignore tout sous /data
+        '/data/data/**'         // ignore /data/data aussi
+      ],
+    }
+    return config
   },
 }
-
-module.exports = nextConfig

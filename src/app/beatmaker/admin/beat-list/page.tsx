@@ -1,80 +1,54 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { fetchBeats, deleteBeat, type Beat } from "@/lib/api/beats"
+
+interface Beat {
+  id: string
+  title: string
+  status: "En ligne" | "Brouillon" | "En attente"
+}
 
 export default function BeatListPage() {
   const [beats, setBeats] = useState<Beat[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setLoading(true)
+    // Exemple : tu devras remplacer par ton appel API réel
+    const fetchBeats = async () => {
+      const response = await fetch("/api/beatmaker/beats")
+      const data = await response.json()
+      setBeats(data)
+    }
+
     fetchBeats()
-      .then((data) => {
-        setBeats(data)
-        setError(null)
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
   }, [])
 
-  async function handleDelete(id: string) {
-    if (confirm("Voulez-vous vraiment supprimer ce beat ? Cette action est irréversible.")) {
-      try {
-        await deleteBeat(id)
-        setBeats((prev) => prev.filter((b) => b.id !== id))
-        alert("Beat supprimé avec succès.")
-      } catch (e) {
-        alert("Erreur lors de la suppression.")
-      }
-    }
-  }
-
-  function getMinPrice(prices: Beat["prices"]) {
-    return Math.min(...Object.values(prices))
-  }
-
-  if (loading) return <p>Chargement...</p>
-  if (error) return <p className="text-red-600">Erreur: {error}</p>
-  if (beats.length === 0) return <p>Aucun beat disponible.</p>
-
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Mes Beats</h1>
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold text-white">Mes Beats</h1>
 
-      <div className="space-y-4">
-        {beats.map((beat) => (
-          <Card key={beat.id} className="flex items-center gap-4 p-4">
-            <img
-              src={beat.miniatureUrl || "/images/placeholder-beat.png"}
-              alt={`Miniature de ${beat.title}`}
-              className="w-20 h-20 object-cover rounded"
-            />
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold">{beat.title}</h2>
-              <p>Prix minimum : {getMinPrice(beat.prices).toFixed(2)} €</p>
-            </div>
-            <div className="flex gap-2">
-              <Link href={`/beatmaker/admin/beat-edit/${beat.id}`}>
-                <Button variant="outline" size="sm">
-                  Éditer
-                </Button>
-              </Link>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDelete(beat.id)}
-              >
-                Supprimer
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+      {beats.length === 0 ? (
+        <p className="text-gray-400">Aucun beat trouvé.</p>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {beats.map((beat) => (
+            <Card key={beat.id} className="bg-gray-900 text-white">
+              <CardContent className="p-4 space-y-2">
+                <h2 className="text-xl font-semibold">{beat.title}</h2>
+                <p className="text-sm text-gray-400">Statut : {beat.status}</p>
+                
+                {beat?.id && (
+                  <Link href={`/beatmaker/admin/beat-edit/${beat.id}`}>
+                    <Button className="mt-2">Modifier</Button>
+                  </Link>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

@@ -1,36 +1,36 @@
-import React from "react"
-import Link from "next/link"
+import React from "react";
+import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="bg-darkbg2 shadow-md p-4 flex justify-between items-center">
-      <Link href="/">
-        <a className="text-2xl font-bold text-primary">BeatsMarket</a>
-      </Link>
-      <nav>
-        <ul className="flex gap-6 text-white font-ptsans">
+    <header className="bg-darkbg text-white py-4">
+      <nav className="max-w-7xl mx-auto flex justify-between items-center px-4">
+        <div className="text-2xl font-bold text-primary">
+          <Link href="/">BeatsMarket</Link>
+        </div>
+        <ul className="flex space-x-6">
           <li>
-            <Link href="/pricing">
-              <a className="hover:text-secondary">Tarifs</a>
+            <Link href="/about" className="hover:text-pink-500 transition">
+              À Propos
             </Link>
           </li>
           <li>
-            <Link href="/about">
-              <a className="hover:text-secondary">À propos</a>
+            <Link href="/pricing" className="hover:text-pink-500 transition">
+              Tarifs
             </Link>
           </li>
           <li>
-            <Link href="/help">
-              <a className="hover:text-secondary">Aide</a>
+            <Link href="/help" className="hover:text-pink-500 transition">
+              Aide
             </Link>
           </li>
           <li>
-            <Link href="/login">
-              <a className="hover:text-primary font-bold">Connexion</a>
+            <Link href="/login" className="hover:text-pink-500 transition">
+              Connexion
             </Link>
           </li>
         </ul>
       </nav>
     </header>
-  )
+  );
 }

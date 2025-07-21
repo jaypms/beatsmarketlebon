@@ -1,22 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
+    "./app/**/*.{js,ts,jsx,tsx}", 
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
       colors: {
-        primary: '#E75480',  // Rose vif BeatsMarket
-        secondary: '#5C2A82', // Violet BeatsMarket
-        background: '#121212', // Fond sombre
-        text: '#FFFFFF', // Texte clair
+        primary: '#ff007f', // rose vif BeatsMarket
+        secondary: '#7c3aed', // violet
+        background: '#0f0f0f', // fond sombre
+        text: '#eee'
       },
       fontFamily: {
-        poppins: ['var(--font-poppins)', 'sans-serif'],
-        ptsans: ['var(--font-pt-sans)', 'sans-serif'],
-      },
+        inter: ['var(--font-inter)', 'sans-serif']
+      }
     },
   },
   plugins: [],
-};
+}

@@ -1,118 +1,163 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-
-interface BeatData {
-  id?: string
-  title: string
-  description: string
-  bpm: number
-  genre: string
-  price: number
-}
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
 
 interface BeatFormProps {
-  initialData?: BeatData
+  onSubmit: (data: BeatFormValues) => void
+  initialData?: BeatFormValues
+  loading?: boolean
 }
 
-export default function BeatForm({ initialData }: BeatFormProps) {
-  const router = useRouter()
-  const [formData, setFormData] = useState<BeatData>(
+export interface BeatFormValues {
+  title: string
+  description: string
+  genre: string
+  tags: string
+  priceMp3: number
+  priceWav: number
+  priceExclusive: number
+  isVisible: boolean
+}
+
+export default function BeatForm({
+  onSubmit,
+  initialData,
+  loading = false,
+}: BeatFormProps) {
+  const [form, setForm] = useState<BeatFormValues>(
     initialData || {
       title: "",
       description: "",
-      bpm: 120,
       genre: "",
-      price: 0,
+      tags: "",
+      priceMp3: 0,
+      priceWav: 0,
+      priceExclusive: 0,
+      isVisible: true,
     }
   )
-  const [loading, setLoading] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "bpm" || name === "price" ? Number(value) : value,
-    }))
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSwitch = (value: boolean) => {
+    setForm((prev) => ({ ...prev, isVisible: value }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-
-    const method = formData.id ? "PUT" : "POST"
-    const url = formData.id
-      ? `/api/beatmaker/beats/${formData.id}`
-      : "/api/beatmaker/beats"
-
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-
-    setLoading(false)
-
-    if (res.ok) {
-      router.push("/beatmaker/admin/beat-list")
-    } else {
-      alert("Erreur lors de la sauvegarde.")
-    }
+    onSubmit(form)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="title">Titre</Label>
-        <Input id="title" name="title" value={formData.title} onChange={handleChange} required />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="title">Titre</Label>
+          <Input
+            id="title"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="genre">Genre</Label>
+          <Input
+            id="genre"
+            name="genre"
+            value={form.genre}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="tags">Tags (séparés par des virgules)</Label>
+          <Input
+            id="tags"
+            name="tags"
+            value={form.tags}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            rows={3}
+          />
+        </div>
       </div>
 
-      <div>
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="priceMp3">Prix MP3 (€)</Label>
+          <Input
+            type="number"
+            id="priceMp3"
+            name="priceMp3"
+            value={form.priceMp3}
+            onChange={handleChange}
+            min={0}
+            step={0.01}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="priceWav">Prix WAV (€)</Label>
+          <Input
+            type="number"
+            id="priceWav"
+            name="priceWav"
+            value={form.priceWav}
+            onChange={handleChange}
+            min={0}
+            step={0.01}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="priceExclusive">Prix Exclusif (€)</Label>
+          <Input
+            type="number"
+            id="priceExclusive"
+            name="priceExclusive"
+            value={form.priceExclusive}
+            onChange={handleChange}
+            min={0}
+            step={0.01}
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <Label htmlFor="visibility">Visible dans la boutique</Label>
+        <Switch
+          id="visibility"
+          checked={form.isVisible}
+          onCheckedChange={handleSwitch}
         />
       </div>
 
-      <div>
-        <Label htmlFor="bpm">BPM</Label>
-        <Input
-          id="bpm"
-          name="bpm"
-          type="number"
-          value={formData.bpm}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="genre">Genre</Label>
-        <Input id="genre" name="genre" value={formData.genre} onChange={handleChange} required />
-      </div>
-
-      <div>
-        <Label htmlFor="price">Prix (€)</Label>
-        <Input
-          id="price"
-          name="price"
-          type="number"
-          value={formData.price}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <Button type="submit" disabled={loading}>
-        {loading ? "Enregistrement..." : "Enregistrer"}
+      <Button type="submit" disabled={loading} className={cn(loading && "opacity-50")}>
+        {loading ? "Enregistrement..." : "Enregistrer le beat"}
       </Button>
     </form>
   )

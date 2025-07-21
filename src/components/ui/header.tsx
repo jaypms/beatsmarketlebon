@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react'
 
 export default function Header() {
   return (
-    <header className="bg-[#0e0b16] py-4">
-      <div className="container mx-auto flex items-center justify-between px-4">
-        <div className="text-xl font-bold text-white">BeatsMarket</div>
-        <nav>
-          <ul className="flex space-x-6 text-white">
-            <li><a href="/" className="hover:text-pink-600">Accueil</a></li>
-            <li><a href="/about" className="hover:text-pink-600">À propos</a></li>
-            <li><a href="/pricing" className="hover:text-pink-600">Tarifs</a></li>
-            <li><a href="/contact" className="hover:text-pink-600">Contact</a></li>
-          </ul>
-        </nav>
+    <header className="bg-gradient-to-r from-purple-700 via-pink-600 to-pink-500 text-white p-6 flex justify-between items-center">
+      <div className="text-2xl font-extrabold tracking-tight">
+        BeatsMarket
       </div>
+      <nav>
+        <ul className="flex gap-6">
+          <li><a href="/" className="hover:underline">Accueil</a></li>
+          <li><a href="/about" className="hover:underline">À Propos</a></li>
+          <li><a href="/pricing" className="hover:underline">Tarifs</a></li>
+          <li><a href="/admin" className="hover:underline">Admin</a></li>
+        </ul>
+      </nav>
     </header>
-  );
+  )
 }

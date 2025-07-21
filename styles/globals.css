@@ -1,15 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Styles globaux personnalisés */
+:root {
+  --font-inter: 'Inter', sans-serif;
+}
 
 body {
-  @apply bg-gray-900 text-white font-sans;
+  font-family: var(--font-inter);
+  margin: 0;
+  padding: 0;
+  background-color: #0f0f0f; /* exemple fond sombre */
+  color: #eee; /* texte clair */
 }
-
-a {
-  @apply text-pink-500 hover:text-pink-400;
-}
-
-/* Ajoute ici tes styles personnalisés */

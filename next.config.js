@@ -1,14 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpackDevMiddleware: config => {
-    config.watchOptions = {
-      poll: 1000,
-      aggregateTimeout: 300,
-      ignored: ['**/node_modules/**', '**/.next/**'],
-    }
-    return config
+  reactStrictMode: true,
+  experimental: {
+    appDir: true,
   },
-  watch: true,
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

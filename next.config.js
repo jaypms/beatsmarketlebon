@@ -1,15 +1,18 @@
-// next.config.js
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   webpackDevMiddleware: config => {
     config.watchOptions = {
-      poll: 1000,               // forcer le polling, important sous Termux
+      poll: 1000,
       ignored: [
         '**/node_modules',
         '**/.next',
-        '/data/**',             // ignore tout sous /data
-        '/data/data/**'         // ignore /data/data aussi
+        '/data/**',        // ignore tous les dossiers /data
+        '/data/data/**',   // ignore aussi /data/data
+        '/',               // ignore la racine /
       ],
     }
     return config
   },
 }
+
+module.exports = nextConfig

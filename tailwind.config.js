@@ -1,27 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx}',   // pour Next.js app directory
-    './pages/**/*.{js,ts,jsx,tsx}', // si tu as encore un dossier pages
-    './components/**/*.{js,ts,jsx,tsx}', // tes composants
+    './app/**/*.{js,ts,jsx,tsx}',
+    './src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        pink: {
-          400: '#FF6FAF',
-          500: '#FF3F8B',
-        },
-        violet: {
-          400: '#8B5CF6',
-          500: '#7C3AED',
-        },
+        primary: '#E75480',  // Rose vif BeatsMarket
+        secondary: '#5C2A82', // Violet BeatsMarket
+        background: '#121212', // Fond sombre
+        text: '#FFFFFF', // Texte clair
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
-        serif: ['PT Serif', 'serif'],
+        poppins: ['var(--font-poppins)', 'sans-serif'],
+        ptsans: ['var(--font-pt-sans)', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}
+};

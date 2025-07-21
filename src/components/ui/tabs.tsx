@@ -1,85 +1,30 @@
 import * as React from "react"
 
-interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
-  defaultValue?: string
-  onValueChange?: (value: string) => void
+interface TabsProps {
+  tabs: { id: string; label: string }[]
+  activeTab: string
+  onTabChange: (id: string) => void
 }
 
-interface TabsListProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  value: string
-}
-
-interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: string
-}
-
-export function Tabs({ defaultValue, onValueChange, children, ...props }: TabsProps) {
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
-
-  React.useEffect(() => {
-    if (defaultValue) {
-      setSelectedValue(defaultValue)
-    }
-  }, [defaultValue])
-
-  const handleValueChange = (value: string) => {
-    setSelectedValue(value)
-    if (onValueChange) {
-      onValueChange(value)
-    }
-  }
-
+export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   return (
-    <div {...props} className={`tabs-root ${props.className ?? ""}`}>
-      {React.Children.map(children, (child) => {
-        if (!React.isValidElement(child)) return null
-        return React.cloneElement(child, {
-          selectedValue,
-          onValueChange: handleValueChange,
-        })
-      })}
-    </div>
-  )
-}
-
-export function TabsList({ children, ...props }: TabsListProps) {
-  return (
-    <div
-      role="tablist"
-      {...props}
-      className={`tabs-list flex border-b border-gray-300 dark:border-gray-700 ${props.className ?? ""}`}
-    >
-      {children}
-    </div>
-  )
-}
-
-export function TabsTrigger({ value, children, ...props }: TabsTriggerProps) {
-  return (
-    <button
-      role="tab"
-      aria-selected={props["aria-selected"]}
-      {...props}
-      className={`tabs-trigger px-4 py-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 
-        data-[selected=true]:border-b-2 data-[selected=true]:border-primary data-[selected=true]:text-primary
-        hover:text-primary
-        ${props.className ?? ""}`}
-      data-selected={props["aria-selected"]}
-    >
-      {children}
-    </button>
-  )
-}
-
-export function TabsContent({ value, children, selectedValue, ...props }: TabsContentProps & { selectedValue?: string }) {
-  if (value !== selectedValue) {
-    return null
-  }
-  return (
-    <div {...props} className={`tabs-content p-4 ${props.className ?? ""}`}>
-      {children}
+    <div className="border-b border-gray-200 dark:border-gray-700">
+      <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+              activeTab === tab.id
+                ? "border-primary text-primary"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+            }`}
+            aria-current={activeTab === tab.id ? "page" : undefined}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
     </div>
   )
 }

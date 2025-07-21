@@ -3,16 +3,12 @@ const nextConfig = {
   webpackDevMiddleware: config => {
     config.watchOptions = {
       poll: 1000,
-      ignored: [
-        '**/node_modules',
-        '**/.next',
-        '/data/**',        // ignore tous les dossiers /data
-        '/data/data/**',   // ignore aussi /data/data
-        '/',               // ignore la racine /
-      ],
+      aggregateTimeout: 300,
+      ignored: ['**/node_modules/**', '**/.next/**'],
     }
     return config
   },
+  watch: true,
 }
 
 module.exports = nextConfig

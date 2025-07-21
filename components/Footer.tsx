@@ -1,5 +1,5 @@
-import React from "react"
-import Link from "next/link"
+import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,7 +8,7 @@ export default function Footer() {
         <div>
           <h2 className="text-primary font-bold text-lg mb-2">BeatsMarket</h2>
           <p className="text-gray-400">
-            La plateforme ultime pour acheter, vendre et promouvoir vos beats.
+            La plateforme ultime pour acheter, vendre et distribuer vos beats.
           </p>
         </div>
         <div>
@@ -31,13 +31,13 @@ export default function Footer() {
             </li>
             <li>
               <Link href="/terms" className="hover:text-pink-500 transition">
-                CGV
+                CGV / CGU
               </Link>
             </li>
           </ul>
         </div>
         <div>
-          <h3 className="font-semibold mb-2">Références</h3>
+          <h3 className="font-semibold mb-2">Réseaux</h3>
           <ul className="space-y-1">
             <li>
               <a href="#" className="hover:text-pink-500 transition">
@@ -54,10 +54,9 @@ export default function Footer() {
                 Instagram
               </a>
             </li>
-            {/* Ajoute ici d'autres liens si nécessaire */}
           </ul>
         </div>
       </div>
     </footer>
-  )
+  );
 }

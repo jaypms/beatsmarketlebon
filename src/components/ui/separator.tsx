@@ -1,7 +1,18 @@
-import * as React from "react"
+"use client"
 
-export function Separator() {
-  return (
-    <hr className="border-t border-gray-200 my-4 dark:border-gray-700" />
-  )
-}
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+const Separator = React.forwardRef<
+  React.ElementRef<"hr">,
+  React.ComponentPropsWithoutRef<"hr">
+>(({ className, ...props }, ref) => (
+  <hr
+    ref={ref}
+    className={cn("border-border bg-border h-px border-0", className)}
+    {...props}
+  />
+))
+Separator.displayName = "Separator"
+
+export { Separator }

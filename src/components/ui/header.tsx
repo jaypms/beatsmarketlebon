@@ -1,22 +1,18 @@
-import React from 'react'
 import Link from 'next/link'
 
 export default function Header() {
   return (
-    <header className="bg-gradient-to-r from-purple-700 via-pink-600 to-pink-500 text-white p-6">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/">
-          <a className="text-2xl font-bold tracking-tight hover:opacity-90">
-            BeatsMarket
-          </a>
-        </Link>
-        <nav className="space-x-6">
-          <Link href="/about"><a className="hover:underline">À propos</a></Link>
-          <Link href="/pricing"><a className="hover:underline">Tarifs</a></Link>
-          <Link href="/help"><a className="hover:underline">Aide</a></Link>
-          <Link href="/admin"><a className="hover:underline">Admin</a></Link>
-        </nav>
-      </div>
+    <header className="bg-[#1e1e2f] text-white p-4 flex justify-between items-center">
+      <Link href="/" className="text-2xl font-bold text-pink-500">
+        BeatsMarket
+      </Link>
+      <nav className="space-x-6">
+        <Link href="/" className="hover:text-pink-400">Accueil</Link>
+        <Link href="/about" className="hover:text-pink-400">À Propos</Link>
+        <Link href="/pricing" className="hover:text-pink-400">Tarifs</Link>
+        <Link href="/terms" className="hover:text-pink-400">CGV</Link>
+        <Link href="/help" className="hover:text-pink-400">Aide</Link>
+      </nav>
     </header>
   )
 }

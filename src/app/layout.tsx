@@ -1,17 +1,22 @@
+// src/app/layout.tsx
 import './globals.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+import { ReactNode } from 'react'
+import Header from '@/components/ui/Header'
+import Footer from '@/components/ui/Footer'
 
 export const metadata = {
-  title: 'BeatsMarket',
-  description: 'Plateforme de beats moderne',
+  title: 'BeatsMarket - Le marché des beats pro',
+  description: 'Achetez et vendez des beats de qualité professionnelle',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className={inter.variable}>
-      <body>{children}</body>
+    <html lang="fr">
+      <body>
+        <Header />
+        <main className="min-h-[80vh]">{children}</main>
+        <Footer />
+      </body>
     </html>
   )
 }

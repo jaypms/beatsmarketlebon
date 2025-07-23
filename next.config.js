@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['yourdomain.com'], // adapte ce domaine si besoin
+    domains: ['yourdomain.com'], // remplace par ton domaine si besoin
   },
 }
 

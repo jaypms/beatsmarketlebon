@@ -1,33 +1,35 @@
 "use client"
 
 import * as React from "react"
-import {
-  Tooltip as TooltipPrimitive,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip-primitive"
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import { cn } from "@/lib/utils"
 
-interface TooltipProps {
-  children: React.ReactNode
-  content: React.ReactNode
-  delayDuration?: number
+const TooltipProvider = TooltipPrimitive.Provider
+const Tooltip = TooltipPrimitive.Root
+const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipContent = TooltipPrimitive.Content
+const TooltipArrow = TooltipPrimitive.Arrow
+
+export {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipArrow,
 }
 
-function Tooltip({
-  children,
-  content,
-  delayDuration = 300,
-  ...props
-}: TooltipProps) {
+interface TooltipContentProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
+  className?: string
+}
+
+export function CustomTooltipContent({ className, ...props }: TooltipContentProps) {
   return (
-    <TooltipProvider delayDuration={delayDuration}>
-      <TooltipPrimitive>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent {...props}>{content}</TooltipContent>
-      </TooltipPrimitive>
-    </TooltipProvider>
+    <TooltipContent
+      className={cn(
+        "z-50 rounded-md bg-gray-900 px-3 py-1.5 text-sm text-white shadow-md animate-in fade-in-80",
+        className
+      )}
+      {...props}
+    />
   )
 }
-
-export { Tooltip }

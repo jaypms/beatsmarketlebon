@@ -1,102 +1,117 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
-import { Badge } from "@/components/ui/badge";
-import { Flame, User, Music, Euro } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DollarSign, Music, User, ShieldAlert } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
-const kpis = [
+const stats = [
   {
-    title: "Revenus totaux",
-    value: "12 340,50 €",
-    icon: <Euro className="w-5 h-5 text-pink-500" />,
+    icon: <User className="w-5 h-5 text-pink-500" />,
+    label: 'Nouveaux inscrits',
+    value: 143
   },
   {
-    title: "Beats vendus",
-    value: "328",
     icon: <Music className="w-5 h-5 text-purple-500" />,
+    label: 'Beats en ligne',
+    value: 862
   },
   {
-    title: "Nouveaux artistes",
-    value: "+45",
-    icon: <User className="w-5 h-5 text-green-500" />,
+    icon: <DollarSign className="w-5 h-5 text-green-500" />,
+    label: 'Revenus mensuels',
+    value: '4 327€'
   },
   {
-    title: "Tendance",
-    value: "+18% ce mois",
-    icon: <Flame className="w-5 h-5 text-orange-500" />,
-  },
-];
+    icon: <ShieldAlert className="w-5 h-5 text-red-500" />,
+    label: 'Modération urgente',
+    value: 3
+  }
+]
 
-const revenueData = [
-  { name: "Jan", revenue: 500 },
-  { name: "Fév", revenue: 1100 },
-  { name: "Mar", revenue: 900 },
-  { name: "Avr", revenue: 2000 },
-  { name: "Mai", revenue: 1850 },
-  { name: "Juin", revenue: 2340 },
-  { name: "Juil", revenue: 1620 },
-];
+const data = [
+  { name: 'Jan', revenue: 1200 },
+  { name: 'Fév', revenue: 2100 },
+  { name: 'Mar', revenue: 800 },
+  { name: 'Avr', revenue: 1600 },
+  { name: 'Mai', revenue: 2500 },
+  { name: 'Juin', revenue: 2000 },
+  { name: 'Juil', revenue: 4327 }
+]
+
+const recentSales = [
+  {
+    artist: 'Luna Waves',
+    beat: 'Midnight Flow',
+    amount: '39,90 €',
+    date: '22/07/2025'
+  },
+  {
+    artist: 'Neo Black',
+    beat: 'Trap Soul Vibes',
+    amount: '14,90 €',
+    date: '21/07/2025'
+  },
+  {
+    artist: 'Sonic Rain',
+    beat: 'Sunset Dream',
+    amount: '79,90 €',
+    date: '20/07/2025'
+  }
+]
 
 export default function AdminDashboardPage() {
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Tableau de bord</h1>
+      <h1 className="text-2xl font-bold">Tableau de bord administrateur</h1>
 
-      {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi, index) => (
-          <Card key={index} className="shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
-              {kpi.icon}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat, index) => (
+          <Card key={index}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
+              {stat.icon}
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{kpi.value}</div>
+              <div className="text-2xl font-bold">{stat.value}</div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Graphique */}
-      <Card className="shadow-md">
+      <Card>
         <CardHeader>
           <CardTitle>Revenus mensuels</CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={revenueData}>
-              <XAxis dataKey="name" stroke="#888888" />
-              <YAxis stroke="#888888" />
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data}>
+              <XAxis dataKey="name" stroke="#8884d8" />
+              <YAxis stroke="#8884d8" />
               <Tooltip />
-              <Bar dataKey="revenue" fill="#ec4899" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Line type="monotone" dataKey="revenue" stroke="#ff4c8b" strokeWidth={2} />
+            </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
-      {/* Section Ventes récentes */}
-      <Card className="shadow-md">
+      <Card>
         <CardHeader>
           <CardTitle>Ventes récentes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">"Drill Night" par BeatX</p>
-              <p className="text-xs text-muted-foreground">19 juillet 2025</p>
+          {recentSales.map((sale, index) => (
+            <div key={index} className="flex items-center justify-between text-sm">
+              <div>
+                <div className="font-medium">{sale.artist}</div>
+                <div className="text-muted-foreground">{sale.beat}</div>
+              </div>
+              <div className="text-right">
+                <div className="font-semibold">{sale.amount}</div>
+                <div className="text-muted-foreground text-xs">{sale.date}</div>
+              </div>
             </div>
-            <Badge variant="outline">29,90 €</Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">"Melancholy" par DarkTune</p>
-              <p className="text-xs text-muted-foreground">18 juillet 2025</p>
-            </div>
-            <Badge variant="outline">14,90 €</Badge>
-          </div>
+          ))}
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

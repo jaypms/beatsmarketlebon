@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    disableCssModulesLightningCss: true,
-  },
   images: {
-    domains: ['yourdomain.com'],
+    domains: ['yourdomain.com'], // Remplace 'yourdomain.com' par ton domaine réel ou supprime cette ligne si inutile
   },
 }
 

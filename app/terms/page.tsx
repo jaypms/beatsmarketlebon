@@ -1,49 +1,121 @@
-import React from "react"
-
-export default function TermsPage() {
+export default function Terms() {
   return (
-    <section className="min-h-screen px-6 py-16 bg-darkbg text-white font-ptsans">
-      <h1 className="text-4xl font-bold text-primary mb-8">Conditions Générales de Vente et d’Utilisation</h1>
+    <main className="pt-20 bg-[#121212] min-h-screen text-white font-poppins px-6 max-w-5xl mx-auto">
+      <h1 className="text-4xl font-extrabold text-pink-500 mb-8 text-center">
+        Conditions Générales de Vente et d'Utilisation (CGV / CGU)
+      </h1>
 
-      <article className="space-y-6 text-gray-300 text-sm leading-relaxed max-w-5xl">
-        <p>
-          Bienvenue sur BeatsMarket. En utilisant notre site, vous acceptez sans réserve les présentes Conditions Générales de Vente et d'Utilisation.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">1. Définitions</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Ce document précise les termes utilisés, les parties contractantes et les concepts essentiels.
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">1. Définitions</h2>
-        <p>
-          "Utilisateur" désigne toute personne utilisant le site. "Beatmaker" et "Artiste" désignent les utilisateurs professionnels inscrits.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">2. Objet</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Les présentes CGV/CGU régissent les conditions d'accès et d'utilisation de la plateforme BeatsMarket.
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">2. Objet</h2>
-        <p>
-          Les CGV/CGU encadrent les relations entre BeatsMarket, les vendeurs (beatmakers) et les acheteurs (artistes).
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">3. Acceptation des conditions</h2>
+        <p className="text-gray-300 leading-relaxed">
+          En utilisant le site, vous acceptez sans réserve ces conditions.
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">3. Licences</h2>
-        <p>
-          Plusieurs types de licences sont proposées : Basique MP3, Premium WAV, Exclusive, Exclusive + Stems. Chaque licence définit des droits spécifiques.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">4. Inscription et comptes</h2>
+        <p className="text-gray-300 leading-relaxed">
+          La création d’un compte utilisateur est nécessaire pour accéder aux services payants et à la boutique.
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">4. Paiement & Commissions</h2>
-        <p>
-          Le paiement est géré via Stripe. BeatsMarket prélève une commission sur chaque vente. Tous les montants sont TTC.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">5. Licences de beats</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Détails sur les différentes licences proposées (basique, premium, exclusive, stems).
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">5. Services</h2>
-        <p>
-          Les services additionnels incluent : mastering IA, création de covers, distribution digitale via Believe, etc.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">6. Prix et paiements</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Les prix affichés sont TTC. Le paiement se fait via Stripe. Les commissions et taxes sont incluses.
         </p>
+      </section>
 
-        <h2 className="text-white text-lg font-semibold mt-10">6. Droit applicable</h2>
-        <p>
-          Les présentes conditions sont régies par le droit français. En cas de litige, les tribunaux compétents seront ceux de Clermont-Ferrand.
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">7. Promotions</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Les promotions peuvent être automatiques ou manuelles et sont soumises à conditions.
         </p>
+      </section>
 
-        <p className="text-xs mt-12 text-gray-500 italic">
-          Dernière mise à jour : juillet 2025
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">8. Services additionnels IA</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Les services comme le mastering IA et la création de covers sont facturés séparément.
         </p>
-      </article>
-    </section>
-  )
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">9. Distribution digitale</h2>
+        <p className="text-gray-300 leading-relaxed">
+          La distribution digitale est assurée via Believe, sans commission supplémentaire pour BeatsMarket.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">10. Sécurité et confidentialité</h2>
+        <p className="text-gray-300 leading-relaxed">
+          BeatsMarket garantit la sécurité des données et le respect de la vie privée des utilisateurs.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">11. Responsabilités</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Limitation des responsabilités concernant l'utilisation des beats et du site.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">12. Propriété intellectuelle</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Les beats restent la propriété intellectuelle des beatmakers, sous licence accordée à l’acheteur.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">13. Durée et résiliation</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Conditions de résiliation des comptes et des services.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">14. Modifications des conditions</h2>
+        <p className="text-gray-300 leading-relaxed">
+          BeatsMarket se réserve le droit de modifier les CGV/CGU à tout moment.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">15. Loi applicable</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Ces conditions sont soumises au droit français.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">16. Contact</h2>
+        <p className="text-gray-300 leading-relaxed">
+          Pour toute question, contactez support@beatsmarket.fr.
+        </p>
+      </section>
+    </main>
+  );
 }

@@ -10,7 +10,7 @@ export function Footer() {
         {/* Image en bas du footer */}
         <div className="mt-6">
           <img
-            src="/images/footer-beatsmarket.jpg"
+            src="/images/footerbeatsmarket.jpg"
             alt="Footer BeatsMarket"
             className="mx-auto max-w-full h-auto rounded-md shadow-lg"
           />

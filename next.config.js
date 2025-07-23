@@ -2,10 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['yourdomain.com'],
-  },
-  experimental: {
-    disableCssModulesLightningCss: true,
+    domains: ['yourdomain.com'], // Remplace 'yourdomain.com' par les domaines d'images autorisés (ex: 'localhost', 'vercel.app', etc.)
   },
 };
 

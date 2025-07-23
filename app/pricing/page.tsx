@@ -1,57 +1,85 @@
-import React from "react"
-
-export default function PricingPage() {
+export default function Pricing() {
   return (
-    <section className="min-h-screen px-6 py-16 bg-darkbg text-white font-poppins">
-      <h1 className="text-4xl font-bold text-primary mb-8">Nos Tarifs</h1>
+    <main className="pt-20 bg-[#121212] min-h-screen text-white font-poppins px-6 max-w-7xl mx-auto">
+      <h1 className="text-5xl font-extrabold text-pink-500 mb-12 text-center">
+        Nos Tarifs
+      </h1>
 
-      {/* Plans d’abonnement */}
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-16">
-        <PlanCard name="Gratuit" price="0€" features={["1 beat en boutique", "Accès IA mastering", "Distribution en option"]} />
-        <PlanCard name="Bronze" price="9,90€" features={["10 beats en boutique", "IA cover incluse", "Mise en avant possible"]} />
-        <PlanCard name="Or" price="19,90€" features={["25 beats", "Priorité IA", "Support premium"]} />
-        <PlanCard name="Diamant" price="49,90€" features={["Beats illimités", "Boost AI", "Mise en avant +"]} />
-        <PlanCard name="Diamant Plus" price="79,90€" features={["Illimité + stats avancées", "Mise en avant prioritaire"]} />
-      </div>
+      {/* Plans d'abonnement */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        {/* Gratuit */}
+        <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
+          <h2 className="text-2xl font-bold mb-4 text-center">Gratuit</h2>
+          <ul className="mb-6 space-y-2 text-gray-300">
+            <li>✔️ 3 beats en boutique</li>
+            <li>✔️ Accès aux stats basiques</li>
+            <li>❌ Pas de mastering IA</li>
+            <li>❌ Pas de distribution digitale</li>
+          </ul>
+          <button className="w-full bg-pink-500 hover:bg-pink-400 py-3 rounded-md font-semibold transition">
+            Choisir Gratuit
+          </button>
+        </div>
+
+        {/* Bronze */}
+        <div className="bg-gray-900 p-6 rounded-lg border border-pink-500 shadow-pink-600">
+          <h2 className="text-2xl font-bold mb-4 text-center text-pink-500">
+            Bronze
+          </h2>
+          <ul className="mb-6 space-y-2 text-gray-300">
+            <li>✔️ 10 beats en boutique</li>
+            <li>✔️ Statistiques avancées</li>
+            <li>✔️ Mastering IA</li>
+            <li>❌ Distribution digitale</li>
+          </ul>
+          <button className="w-full bg-pink-600 hover:bg-pink-500 py-3 rounded-md font-semibold transition text-white">
+            Choisir Bronze
+          </button>
+        </div>
+
+        {/* Or */}
+        <div className="bg-gray-900 p-6 rounded-lg border border-yellow-400 shadow-yellow-500">
+          <h2 className="text-2xl font-bold mb-4 text-center text-yellow-400">
+            Or
+          </h2>
+          <ul className="mb-6 space-y-2 text-gray-300">
+            <li>✔️ Beats illimités</li>
+            <li>✔️ Statistiques premium</li>
+            <li>✔️ Mastering IA avancé</li>
+            <li>✔️ Distribution digitale</li>
+          </ul>
+          <button className="w-full bg-yellow-400 hover:bg-yellow-300 py-3 rounded-md font-semibold transition text-black">
+            Choisir Or
+          </button>
+        </div>
+      </section>
 
       {/* Services additionnels */}
-      <h2 className="text-2xl font-semibold text-pink-500 mb-4">Services IA & Options</h2>
-      <ul className="space-y-2 text-lg mb-16">
-        <li>- Mastering IA : <span className="text-white">4,90€ / track</span></li>
-        <li>- Cover IA Pro : <span className="text-white">6,90€ / cover</span></li>
-        <li>- Distribution digitale : <span className="text-white">14,90€ / single</span> ou <span className="text-white">39,90€ / album</span></li>
-      </ul>
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-pink-500 mb-6 text-center">
+          Services Additionnels
+        </h2>
+        <div className="bg-gray-900 p-6 rounded-lg max-w-3xl mx-auto text-center text-gray-300">
+          <p>
+            En plus de votre abonnement, profitez de services comme le mastering
+            IA et la création de covers personnalisées pour vos beats.
+          </p>
+        </div>
+      </section>
 
-      {/* Licences */}
-      <h2 className="text-2xl font-semibold text-pink-500 mb-4">Licences de Beats</h2>
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <LicenseCard type="Basique MP3" price="À partir de 14,90€" rights="Usage commercial limité" />
-        <LicenseCard type="Premium WAV" price="À partir de 29,90€" rights="Usage commercial étendu" />
-        <LicenseCard type="Exclusive" price="À partir de 99,90€" rights="Vente unique, droits exclusifs" />
-        <LicenseCard type="Exclusive + Stems" price="Dès 149,90€" rights="Inclut les multipistes, exclusif" />
-      </div>
-    </section>
-  )
-}
-
-function PlanCard({ name, price, features }: { name: string, price: string, features: string[] }) {
-  return (
-    <div className="bg-zinc-900 rounded-2xl p-6 shadow-md border border-zinc-700">
-      <h3 className="text-xl font-semibold text-primary mb-2">{name}</h3>
-      <p className="text-3xl font-bold mb-4">{price}</p>
-      <ul className="space-y-1 text-sm text-gray-300">
-        {features.map((f, i) => <li key={i}>• {f}</li>)}
-      </ul>
-    </div>
-  )
-}
-
-function LicenseCard({ type, price, rights }: { type: string, price: string, rights: string }) {
-  return (
-    <div className="bg-zinc-800 rounded-2xl p-5 border border-zinc-600">
-      <h4 className="text-lg font-bold text-violet-400 mb-2">{type}</h4>
-      <p className="text-xl font-semibold mb-1">{price}</p>
-      <p className="text-sm text-gray-400">{rights}</p>
-    </div>
-  )
+      {/* Gestion des droits */}
+      <section>
+        <h2 className="text-3xl font-bold text-pink-500 mb-6 text-center">
+          Gestion des droits & licences
+        </h2>
+        <div className="bg-gray-900 p-6 rounded-lg max-w-4xl mx-auto text-gray-300 leading-relaxed">
+          <p>
+            Toutes nos licences vous garantissent des droits clairs sur vos achats
+            de beats, avec des options allant de licences basiques MP3 à des
+            exclusivités complètes avec stems.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
 }

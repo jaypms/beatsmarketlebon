@@ -1,107 +1,75 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import React from "react"
+import { StatusBadge } from "@/components/ui/status-badge"
+import { ActionMenu } from "@/components/ui/action-menu"
 
-interface Artist {
-  id: string;
-  name: string;
-  email: string;
-  status: "active" | "pending" | "banned";
-  createdAt: string;
+type Artist = {
+  id: string
+  name: string
+  email: string
+  status: "actif" | "en attente" | "banni"
+  purchasesCount: number
+  spent: number
 }
 
-const STATUS_BADGES = {
-  active: "bg-green-600 text-white",
-  pending: "bg-yellow-500 text-black",
-  banned: "bg-red-600 text-white",
-};
+const dummyArtists: Artist[] = [
+  { id: "1", name: "Laura", email: "laura@example.com", status: "actif", purchasesCount: 8, spent: 250 },
+  { id: "2", name: "David", email: "david@example.com", status: "en attente", purchasesCount: 0, spent: 0 },
+  { id: "3", name: "Sarah", email: "sarah@example.com", status: "banni", purchasesCount: 3, spent: 80 },
+]
 
-export default function AdminArtists() {
-  const [artists, setArtists] = useState<Artist[]>([]);
-
-  useEffect(() => {
-    // Mock fetch artists
-    setArtists([
-      { id: "1", name: "Alice", email: "alice@example.com", status: "active", createdAt: "2025-06-10" },
-      { id: "2", name: "Bob", email: "bob@example.com", status: "pending", createdAt: "2025-06-15" },
-      { id: "3", name: "Charlie", email: "charlie@example.com", status: "banned", createdAt: "2025-05-22" },
-    ]);
-  }, []);
-
+export default function AdminArtistsPage() {
+  const handleEdit = (id: string) => {
+    alert(`Éditer artiste ${id}`)
+  }
+  const handleBan = (id: string) => {
+    alert(`Bannir artiste ${id}`)
+  }
   const handleDelete = (id: string) => {
-    if (confirm("Confirmez-vous la suppression de cet artiste ? Cette action est irréversible.")) {
-      setArtists((prev) => prev.filter((a) => a.id !== id));
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet artiste ? Cette action est irréversible.")) {
+      alert(`Artiste ${id} supprimé`)
     }
-  };
+  }
 
   return (
-    <main className="pt-20 px-6 max-w-7xl mx-auto bg-[#121212] min-h-screen text-white font-poppins">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-pink-500">Gestion des Artistes</h1>
-        <Button>Ajouter un artiste</Button>
-      </div>
+    <section className="min-h-screen bg-darkbg px-6 py-12 text-white font-poppins">
+      <h1 className="text-4xl font-bold text-primary mb-8">Gestion des Artistes</h1>
 
-      <div className="overflow-x-auto bg-gray-900 rounded-lg shadow-md">
-        <table className="w-full table-auto text-left">
-          <thead className="border-b border-gray-700">
+      <div className="overflow-x-auto rounded-lg border border-gray-700">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-darkbg2 text-gray-300">
             <tr>
-              <th className="py-3 px-4">Nom</th>
-              <th className="py-3 px-4">Email</th>
-              <th className="py-3 px-4">Statut</th>
-              <th className="py-3 px-4">Inscrit le</th>
-              <th className="py-3 px-4">Actions</th>
+              <th className="px-4 py-3">Nom</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Achats</th>
+              <th className="px-4 py-3">Total dépensé (€)</th>
+              <th className="px-4 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {artists.map(({ id, name, email, status, createdAt }) => (
-              <tr
-                key={id}
-                className="border-b border-gray-800 hover:bg-gray-800 transition"
-              >
-                <td className="py-3 px-4">{name}</td>
-                <td className="py-3 px-4">{email}</td>
-                <td className="py-3 px-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${STATUS_BADGES[status]}`}>
-                    {status.toUpperCase()}
-                  </span>
+            {dummyArtists.map((a) => (
+              <tr key={a.id} className="border-t border-gray-700 hover:bg-darkbg2/50">
+                <td className="px-4 py-3">{a.name}</td>
+                <td className="px-4 py-3">{a.email}</td>
+                <td className="px-4 py-3">
+                  <StatusBadge status={a.status} />
                 </td>
-                <td className="py-3 px-4">{new Date(createdAt).toLocaleDateString()}</td>
-                <td className="py-3 px-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-5 w-5" />
-                        <span className="sr-only">Actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => alert(`Modifier l'artiste ${name}`)}>
-                        Modifier
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(id)}>
-                        Supprimer
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => alert(`Voir profil ${name}`)}>
-                        Voir profil
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <td className="px-4 py-3">{a.purchasesCount}</td>
+                <td className="px-4 py-3">{a.spent.toFixed(2)}</td>
+                <td className="px-4 py-3">
+                  <ActionMenu
+                    onEdit={() => handleEdit(a.id)}
+                    onBan={() => handleBan(a.id)}
+                    onDelete={() => handleDelete(a.id)}
+                  />
                 </td>
               </tr>
             ))}
-            {artists.length === 0 && (
-              <tr>
-                <td colSpan={5} className="py-4 text-center text-gray-500">
-                  Aucun artiste trouvé.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
-    </main>
-  );
+    </section>
+  )
 }

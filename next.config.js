@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['yourdomain.com'], // Remplace par tes domaines d'images autorisés (ex: 'localhost', 'vercel.app', etc.)
+    domains: ['yourdomain.com'], // adapte à ton besoin
   },
 };
 

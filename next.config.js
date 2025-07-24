@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    domains: ['yourdomain.com'], // adapte à ton besoin
+  experimental: {
+    optimizeCss: false, // Désactive lightningcss
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

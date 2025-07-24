@@ -1,182 +1,132 @@
-import React, { useState } from "react";
-import ActionsMenu from "../../components/ActionsMenu";
-import Modal from "../../components/Modal";
-import UserForm from "../../components/UserForm";
-
-type Status = "actif" | "suspendu" | "en attente";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import ActionsMenu from "@/components/ui/actions-menu";
+import Modal from "@/components/ui/modal";
+import UserForm from "@/components/forms/UserForm";
 
 type Beatmaker = {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  status: Status;
-  genre?: string;
+  status: "actif" | "suspendu" | "en_attente";
 };
 
-const initialBeatmakers: Beatmaker[] = [
-  { id: 1, name: "Jean Beat", email: "jean@example.com", status: "actif", genre: "Hip-Hop" },
-  { id: 2, name: "Lina Sound", email: "lina@example.com", status: "en attente", genre: "Trap" },
-  { id: 3, name: "Mike Prod", email: "mike@example.com", status: "suspendu", genre: "Pop" },
-];
+export default function AdminBeatmakersPage() {
+  const [beatmakers, setBeatmakers] = useState<Beatmaker[]>([]);
+  const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState<Beatmaker[]>([]);
+  const [selected, setSelected] = useState<Beatmaker | null>(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
-const statusColors: Record<Status, string> = {
-  actif: "bg-green-500",
-  suspendu: "bg-red-500",
-  en attente: "bg-yellow-400",
-};
+  useEffect(() => {
+    setFiltered(
+      beatmakers.filter(
+        (b) =>
+          b.name.toLowerCase().includes(search.toLowerCase()) ||
+          b.email.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, beatmakers]);
 
-const statusOptions: Status[] = ["actif", "suspendu", "en attente"];
+  const openEditModal = (beatmaker: Beatmaker) => {
+    setSelected(beatmaker);
+    setShowEdit(true);
+  };
 
-export default function AdminBeatmakers() {
-  const [beatmakers, setBeatmakers] = useState<Beatmaker[]>(initialBeatmakers);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
-  const [selectedBeatmaker, setSelectedBeatmaker] = useState<Beatmaker | null>(null);
+  const openDeleteModal = (beatmaker: Beatmaker) => {
+    setSelected(beatmaker);
+    setShowDelete(true);
+  };
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-
-  function openAddModal() {
-    setSelectedBeatmaker(null);
-    setModalMode("add");
-    setIsModalOpen(true);
-  }
-
-  function openEditModal(beatmaker: Beatmaker) {
-    setSelectedBeatmaker(beatmaker);
-    setModalMode("edit");
-    setIsModalOpen(true);
-  }
-
-  function openDeleteModal(beatmaker: Beatmaker) {
-    setSelectedBeatmaker(beatmaker);
-    setModalMode("delete");
-    setIsModalOpen(true);
-  }
-
-  function closeModal() {
-    setIsModalOpen(false);
-    setSelectedBeatmaker(null);
-  }
-
-  function handleDeleteConfirm() {
-    if (selectedBeatmaker) {
-      setBeatmakers((prev) => prev.filter((b) => b.id !== selectedBeatmaker.id));
-      closeModal();
-    }
-  }
-
-  function handleFormSubmit(data: Omit<Beatmaker, "id">) {
-    if (modalMode === "add") {
-      const newBeatmaker: Beatmaker = {
-        id: Math.max(0, ...beatmakers.map((b) => b.id)) + 1,
-        ...data,
-      };
-      setBeatmakers((prev) => [...prev, newBeatmaker]);
-    } else if (modalMode === "edit" && selectedBeatmaker) {
-      setBeatmakers((prev) =>
-        prev.map((b) => (b.id === selectedBeatmaker.id ? { ...b, ...data } : b))
-      );
-    }
-    closeModal();
-  }
-
-  // Bascule entre "actif" et "suspendu"
-  function toggleStatus(beatmaker: Beatmaker) {
+  const toggleStatus = (beatmaker: Beatmaker) => {
     setBeatmakers((prev) =>
       prev.map((b) =>
         b.id === beatmaker.id
-          ? { ...b, status: b.status === "actif" ? "suspendu" : "actif" }
+          ? {
+              ...b,
+              status: b.status === "actif" ? "suspendu" : "actif",
+            }
           : b
       )
     );
-  }
+  };
 
-  const filteredBeatmakers = beatmakers.filter((b) => {
-    const matchesSearch =
-      b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter ? b.status === statusFilter : true;
-    return matchesSearch && matchesStatus;
-  });
+  const handleAdd = (data: { name: string; email: string; status: string }) => {
+    const newBeatmaker: Beatmaker = {
+      id: crypto.randomUUID(),
+      ...data,
+      status: data.status as "actif" | "suspendu" | "en_attente",
+    };
+    setBeatmakers((prev) => [...prev, newBeatmaker]);
+    setShowAdd(false);
+  };
+
+  const handleEdit = (data: { name: string; email: string; status: string }) => {
+    if (!selected) return;
+    setBeatmakers((prev) =>
+      prev.map((b) =>
+        b.id === selected.id ? { ...b, ...data } : b
+      )
+    );
+    setShowEdit(false);
+    setSelected(null);
+  };
+
+  const handleDelete = () => {
+    if (!selected) return;
+    setBeatmakers((prev) => prev.filter((b) => b.id !== selected.id));
+    setShowDelete(false);
+    setSelected(null);
+  };
 
   return (
-    <main className="bg-[#1A1B1F] text-white min-h-screen px-8 py-12 max-w-7xl mx-auto font-['PT_Sans', 'Poppins']">
-      <header className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">Gestion des beatmakers</h1>
-        <button
-          className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded font-semibold transition-colors"
-          type="button"
-          onClick={openAddModal}
-        >
-          + Ajouter un beatmaker
-        </button>
-      </header>
-
-      <div className="flex flex-wrap items-center gap-4 mb-6">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Rechercher beatmaker..."
-          className="px-3 py-2 rounded bg-[#1A1B1F] border border-gray-600 text-white focus:border-pink-500 flex-grow min-w-[200px]"
-        />
-
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 rounded bg-[#1A1B1F] border border-gray-600 text-white focus:border-pink-500"
-        >
-          <option value="">Tous statuts</option>
-          {statusOptions.map((status) => (
-            <option key={status} value={status}>
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </option>
-          ))}
-        </select>
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Gestion des Beatmakers</h1>
+        <Button onClick={() => setShowAdd(true)}>Ajouter</Button>
       </div>
 
-      <section className="overflow-x-auto">
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr className="border-b border-gray-600">
-              <th className="text-left py-3 px-4">Nom</th>
-              <th className="text-left py-3 px-4">Email</th>
-              <th className="text-left py-3 px-4">Genre</th>
-              <th className="text-left py-3 px-4">Statut</th>
-              <th className="text-left py-3 px-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBeatmakers.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="text-center py-6 text-gray-400">
-                  Aucun beatmaker trouvé.
-                </td>
+      <Input
+        placeholder="Rechercher un beatmaker..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <Card>
+        <CardContent className="overflow-x-auto p-4">
+          <table className="min-w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-zinc-700">
+                <th className="px-4 py-2">Nom</th>
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Statut</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
-            ) : (
-              filteredBeatmakers.map((beatmaker) => (
-                <tr
-                  key={beatmaker.id}
-                  className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
-                >
-                  <td className="py-3 px-4">{beatmaker.name}</td>
-                  <td className="py-3 px-4">{beatmaker.email}</td>
-                  <td className="py-3 px-4">{beatmaker.genre || "-"}</td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                        {
-                          actif: "bg-green-500",
-                          suspendu: "bg-red-500",
-                          "en attente": "bg-yellow-400",
-                        }[beatmaker.status]
-                      }`}
+            </thead>
+            <tbody>
+              {filtered.map((beatmaker) => (
+                <tr key={beatmaker.id} className="border-b border-zinc-800">
+                  <td className="px-4 py-2">{beatmaker.name}</td>
+                  <td className="px-4 py-2">{beatmaker.email}</td>
+                  <td className="px-4 py-2">
+                    <Badge
+                      variant={
+                        beatmaker.status === "actif"
+                          ? "success"
+                          : beatmaker.status === "suspendu"
+                          ? "destructive"
+                          : "outline"
+                      }
                     >
                       {beatmaker.status}
-                    </span>
+                    </Badge>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="px-4 py-2">
                     <ActionsMenu
                       actions={[
                         {
@@ -199,64 +149,64 @@ export default function AdminBeatmakers() {
                     />
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </section>
+              ))}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
 
+      {/* Modal Ajouter */}
+      <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Ajouter un beatmaker">
+        <UserForm onSubmit={handleAdd} onCancel={() => setShowAdd(false)} />
+      </Modal>
+
+      {/* Modal Modifier */}
       <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        title={
-          modalMode === "add"
-            ? "Ajouter un beatmaker"
-            : modalMode === "edit"
-            ? "Modifier un beatmaker"
-            : "Confirmation de suppression"
-        }
-        footer={
-          modalMode === "delete" ? (
-            <>
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
-              >
-                Supprimer
-              </button>
-            </>
-          ) : null
-        }
+        open={showEdit}
+        onClose={() => {
+          setShowEdit(false);
+          setSelected(null);
+        }}
+        title="Modifier un beatmaker"
       >
-        {modalMode === "delete" ? (
-          <p>
-            Êtes-vous sûr de vouloir supprimer le beatmaker{" "}
-            <strong>{selectedBeatmaker?.name}</strong> ? Cette action est irréversible.
-          </p>
-        ) : (
+        {selected && (
           <UserForm
-            initialData={
-              modalMode === "edit"
-                ? {
-                    name: selectedBeatmaker?.name || "",
-                    email: selectedBeatmaker?.email || "",
-                    status: selectedBeatmaker?.status || "en attente",
-                    genre: selectedBeatmaker?.genre || "",
-                  }
-                : undefined
-            }
-            onCancel={closeModal}
-            onSubmit={handleFormSubmit}
-            submitLabel={modalMode === "edit" ? "Modifier" : "Ajouter"}
+            initialValues={selected}
+            onSubmit={handleEdit}
+            onCancel={() => {
+              setShowEdit(false);
+              setSelected(null);
+            }}
           />
         )}
       </Modal>
-    </main>
+
+      {/* Modal Supprimer */}
+      <Modal
+        open={showDelete}
+        onClose={() => {
+          setShowDelete(false);
+          setSelected(null);
+        }}
+        title="Supprimer ce beatmaker ?"
+        description="Cette action est irréversible. Toutes les données liées à ce beatmaker seront définitivement supprimées."
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowDelete(false);
+                setSelected(null);
+              }}
+            >
+              Annuler
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Supprimer
+            </Button>
+          </div>
+        }
+      />
+    </div>
   );
 }

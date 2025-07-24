@@ -1,64 +1,65 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
-  children: ReactNode;
-  footer?: ReactNode;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 export default function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
-  // Gestion fermeture avec Escape
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Close on ESC key
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+      }
     }
     if (isOpen) {
       document.addEventListener("keydown", onKeyDown);
+    } else {
+      document.removeEventListener("keydown", onKeyDown);
     }
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [isOpen, onClose]);
 
+  // Close on click outside modal content
+  function onBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      onClose();
+    }
+  }
+
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Overlay */}
+    <div
+      onClick={onBackdropClick}
+      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4"
+      aria-modal="true"
+      role="dialog"
+      aria-labelledby="modal-title"
+      tabIndex={-1}
+    >
       <div
-        className="fixed inset-0 bg-black bg-opacity-60 z-40"
-        onClick={onClose}
-        aria-hidden="true"
-      ></div>
-
-      {/* Modal content */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        className="fixed inset-0 flex items-center justify-center z-50 px-4"
+        ref={modalRef}
+        className="bg-[#121214] rounded-lg max-w-lg w-full max-h-[90vh] overflow-auto p-6 shadow-lg"
       >
-        <div
-          className="bg-[#27282D] rounded-lg shadow-lg max-w-lg w-full p-6 relative"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {title && (
-            <header className="mb-4">
-              <h2 className="text-xl font-semibold font-['Poppins']">{title}</h2>
-            </header>
-          )}
-          <section className="mb-6">{children}</section>
-          {footer && <footer className="flex justify-end space-x-3">{footer}</footer>}
-          <button
-            onClick={onClose}
-            aria-label="Fermer la modale"
-            className="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition-colors"
-          >
-            &#10005;
-          </button>
-        </div>
+        {title && (
+          <h2 id="modal-title" className="text-xl font-bold text-white mb-4 font-['Poppins']">
+            {title}
+          </h2>
+        )}
+        <div className="mb-6">{children}</div>
+        {footer && (
+          <footer className="flex justify-end gap-4 border-t border-gray-700 pt-4">{footer}</footer>
+        )}
       </div>
-    </>
+    </div>
   );
 }

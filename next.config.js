@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    // Désactive l'utilisation de lightningcss
-    swcPlugins: [],
-    optimizeCss: false,
+    optimizeCss: false, // Désactive l'optimisation CSS native (LightningCSS)
   },
 };
 

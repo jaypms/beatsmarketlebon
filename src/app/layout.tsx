@@ -1,22 +1,27 @@
 // src/app/layout.tsx
-import './globals.css'
-import { ReactNode } from 'react'
-import Header from '@/components/ui/Header'
-import Footer from '@/components/ui/Footer'
 
-export const metadata = {
-  title: 'BeatsMarket - Le marché des beats pro',
-  description: 'Achetez et vendez des beats de qualité professionnelle',
-}
+import './globals.css';
+import type { Metadata } from 'next';
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export const metadata: Metadata = {
+  title: 'BeatsMarket',
+  description: 'Le site des beatmakers et artistes',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="fr">
-      <body>
-        <Header />
-        <main className="min-h-[80vh]">{children}</main>
-        <Footer />
-      </body>
+    <html lang="fr" className="font-inter">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>{children}</body>
     </html>
-  )
+  );
 }

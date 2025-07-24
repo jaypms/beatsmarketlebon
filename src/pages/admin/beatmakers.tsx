@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
+import Modal from "../../components/Modal";
 
 type Beatmaker = {
   id: number;
@@ -9,7 +10,7 @@ type Beatmaker = {
   beatsCount: number;
 };
 
-const beatmakersData: Beatmaker[] = [
+const initialBeatmakers: Beatmaker[] = [
   { id: 1, name: "Jay Jay", email: "jayjay@example.com", status: "actif", beatsCount: 15 },
   { id: 2, name: "Lina", email: "lina@example.com", status: "en attente", beatsCount: 5 },
   { id: 3, name: "Tommy", email: "tommy@example.com", status: "suspendu", beatsCount: 8 },
@@ -22,6 +23,27 @@ const statusColors: Record<Beatmaker["status"], string> = {
 };
 
 export default function AdminBeatmakers() {
+  const [beatmakers, setBeatmakers] = useState<Beatmaker[]>(initialBeatmakers);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [beatmakerToDelete, setBeatmakerToDelete] = useState<Beatmaker | null>(null);
+
+  function openDeleteModal(beatmaker: Beatmaker) {
+    setBeatmakerToDelete(beatmaker);
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setBeatmakerToDelete(null);
+  }
+
+  function confirmDelete() {
+    if (beatmakerToDelete) {
+      setBeatmakers((prev) => prev.filter((b) => b.id !== beatmakerToDelete.id));
+      closeModal();
+    }
+  }
+
   return (
     <main className="bg-[#1A1B1F] text-white min-h-screen px-8 py-12 max-w-7xl mx-auto font-['PT_Sans', 'Poppins']">
       <header className="flex justify-between items-center mb-8">
@@ -46,7 +68,7 @@ export default function AdminBeatmakers() {
             </tr>
           </thead>
           <tbody>
-            {beatmakersData.map(({ id, name, email, status, beatsCount }) => (
+            {beatmakers.map(({ id, name, email, status, beatsCount }) => (
               <tr
                 key={id}
                 className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
@@ -61,12 +83,19 @@ export default function AdminBeatmakers() {
                     {status}
                   </span>
                 </td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 flex space-x-2">
                   <button
                     className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
                     aria-label="Actions"
                   >
                     <MoreVertical className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal({ id, name, email, status, beatsCount })}
+                    className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
+                    aria-label={`Supprimer ${name}`}
+                  >
+                    🗑️
                   </button>
                 </td>
               </tr>
@@ -74,6 +103,33 @@ export default function AdminBeatmakers() {
           </tbody>
         </table>
       </section>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Confirmation de suppression"
+        footer={
+          <>
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-colors"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
+            >
+              Supprimer
+            </button>
+          </>
+        }
+      >
+        <p>
+          Êtes-vous sûr de vouloir supprimer le beatmaker{" "}
+          <strong>{beatmakerToDelete?.name}</strong> ? Cette action est irréversible.
+        </p>
+      </Modal>
     </main>
   );
 }

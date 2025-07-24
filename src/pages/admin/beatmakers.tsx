@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
 import Modal from "../../components/Modal";
+import BeatmakerForm from "../../components/BeatmakerForm";
 
 type Beatmaker = {
   id: number;
@@ -25,23 +26,53 @@ const statusColors: Record<Beatmaker["status"], string> = {
 export default function AdminBeatmakers() {
   const [beatmakers, setBeatmakers] = useState<Beatmaker[]>(initialBeatmakers);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [beatmakerToDelete, setBeatmakerToDelete] = useState<Beatmaker | null>(null);
+  const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
+  const [selectedBeatmaker, setSelectedBeatmaker] = useState<Beatmaker | null>(null);
+
+  function openAddModal() {
+    setSelectedBeatmaker(null);
+    setModalMode("add");
+    setIsModalOpen(true);
+  }
+
+  function openEditModal(beatmaker: Beatmaker) {
+    setSelectedBeatmaker(beatmaker);
+    setModalMode("edit");
+    setIsModalOpen(true);
+  }
 
   function openDeleteModal(beatmaker: Beatmaker) {
-    setBeatmakerToDelete(beatmaker);
+    setSelectedBeatmaker(beatmaker);
+    setModalMode("delete");
     setIsModalOpen(true);
   }
 
   function closeModal() {
     setIsModalOpen(false);
-    setBeatmakerToDelete(null);
+    setSelectedBeatmaker(null);
   }
 
-  function confirmDelete() {
-    if (beatmakerToDelete) {
-      setBeatmakers((prev) => prev.filter((b) => b.id !== beatmakerToDelete.id));
+  function handleDeleteConfirm() {
+    if (selectedBeatmaker) {
+      setBeatmakers((prev) => prev.filter((b) => b.id !== selectedBeatmaker.id));
       closeModal();
     }
+  }
+
+  function handleFormSubmit(data: Omit<Beatmaker, "id"> | Beatmaker) {
+    if (modalMode === "add") {
+      const newBeatmaker = {
+        ...(data as Omit<Beatmaker, "id">),
+        id: Math.max(...beatmakers.map((b) => b.id)) + 1,
+        beatsCount: 0,
+      };
+      setBeatmakers((prev) => [...prev, newBeatmaker]);
+    } else if (modalMode === "edit" && selectedBeatmaker) {
+      setBeatmakers((prev) =>
+        prev.map((b) => (b.id === selectedBeatmaker.id ? { ...b, ...data } : b))
+      );
+    }
+    closeModal();
   }
 
   return (
@@ -51,6 +82,7 @@ export default function AdminBeatmakers() {
         <button
           className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded font-semibold transition-colors"
           type="button"
+          onClick={openAddModal}
         >
           + Ajouter un beatmaker
         </button>
@@ -78,58 +110,4 @@ export default function AdminBeatmakers() {
                 <td className="py-3 px-4">{beatsCount}</td>
                 <td className="py-3 px-4">
                   <span
-                    className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[status]}`}
-                  >
-                    {status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 flex space-x-2">
-                  <button
-                    className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                    aria-label="Actions"
-                  >
-                    <MoreVertical className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal({ id, name, email, status, beatsCount })}
-                    className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
-                    aria-label={`Supprimer ${name}`}
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        title="Confirmation de suppression"
-        footer={
-          <>
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-colors"
-            >
-              Annuler
-            </button>
-            <button
-              onClick={confirmDelete}
-              className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
-            >
-              Supprimer
-            </button>
-          </>
-        }
-      >
-        <p>
-          Êtes-vous sûr de vouloir supprimer le beatmaker{" "}
-          <strong>{beatmakerToDelete?.name}</strong> ? Cette action est irréversible.
-        </p>
-      </Modal>
-    </main>
-  );
-}
+                    className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${

@@ -2,22 +2,24 @@ import React, { useState, useEffect } from "react";
 
 type Status = "actif" | "suspendu" | "en attente";
 
-interface UserFormProps {
-  initialData?: {
-    name: string;
-    email: string;
-    status: Status;
-  };
-  onSubmit: (data: { name: string; email: string; status: Status }) => void;
+type UserFormData = {
+  name: string;
+  email: string;
+  status: Status;
+};
+
+type UserFormProps = {
+  initialData?: Partial<UserFormData>;
+  onSubmit: (data: UserFormData) => void;
   onCancel: () => void;
   submitLabel?: string;
-}
+};
 
 export default function UserForm({
   initialData,
   onSubmit,
   onCancel,
-  submitLabel = "Enregistrer",
+  submitLabel = "Valider",
 }: UserFormProps) {
   const [name, setName] = useState(initialData?.name || "");
   const [email, setEmail] = useState(initialData?.email || "");
@@ -29,13 +31,15 @@ export default function UserForm({
     setName(initialData?.name || "");
     setEmail(initialData?.email || "");
     setStatus(initialData?.status || "en attente");
+    setErrors({});
   }, [initialData]);
 
   function validate() {
-    const newErrors: { name?: string; email?: string } = {};
-    if (!name.trim()) newErrors.name = "Le nom est requis.";
-    if (!email.trim()) newErrors.email = "L’email est requis.";
-    else if (!/^\S+@\S+\.\S+$/.test(email)) newErrors.email = "Email invalide.";
+    const newErrors: typeof errors = {};
+    if (!name.trim()) newErrors.name = "Le nom est obligatoire";
+    if (!email.trim()) newErrors.email = "L'email est obligatoire";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Email invalide";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -47,9 +51,12 @@ export default function UserForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 text-white font-['PT_Sans', 'Poppins']">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="name" className="block mb-1 font-semibold">
+        <label
+          htmlFor="name"
+          className="block mb-1 font-semibold text-white"
+        >
           Nom
         </label>
         <input
@@ -59,15 +66,19 @@ export default function UserForm({
           onChange={(e) => setName(e.target.value)}
           className={`w-full rounded px-3 py-2 bg-[#1A1B1F] border ${
             errors.name ? "border-red-500" : "border-gray-600"
-          } focus:outline-none focus:border-pink-500 transition-colors`}
-          autoFocus
-          required
+          } text-white focus:outline-none focus:border-pink-500`}
+          autoComplete="off"
         />
-        {errors.name && <p className="mt-1 text-red-500 text-sm">{errors.name}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="email" className="block mb-1 font-semibold">
+        <label
+          htmlFor="email"
+          className="block mb-1 font-semibold text-white"
+        >
           Email
         </label>
         <input
@@ -77,30 +88,34 @@ export default function UserForm({
           onChange={(e) => setEmail(e.target.value)}
           className={`w-full rounded px-3 py-2 bg-[#1A1B1F] border ${
             errors.email ? "border-red-500" : "border-gray-600"
-          } focus:outline-none focus:border-pink-500 transition-colors`}
-          required
+          } text-white focus:outline-none focus:border-pink-500`}
+          autoComplete="off"
         />
-        {errors.email && <p className="mt-1 text-red-500 text-sm">{errors.email}</p>}
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="status" className="block mb-1 font-semibold">
+        <label
+          htmlFor="status"
+          className="block mb-1 font-semibold text-white"
+        >
           Statut
         </label>
         <select
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value as Status)}
-          className="w-full rounded px-3 py-2 bg-[#1A1B1F] border border-gray-600 focus:outline-none focus:border-pink-500 transition-colors"
-          required
+          className="w-full rounded px-3 py-2 bg-[#1A1B1F] border border-gray-600 text-white focus:outline-none focus:border-pink-500"
         >
           <option value="actif">Actif</option>
-          <option value="en attente">En attente</option>
           <option value="suspendu">Suspendu</option>
+          <option value="en attente">En attente</option>
         </select>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <div className="flex justify-end space-x-4">
         <button
           type="button"
           onClick={onCancel}

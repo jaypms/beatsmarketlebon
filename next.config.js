@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    optimizeCss: false, // Désactive lightningcss
+    optimizeCss: false, // On désactive Lightning CSS pour éviter les erreurs natives
   },
 }
 

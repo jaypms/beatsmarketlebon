@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import ActionsMenu from "../../components/ActionsMenu";
 import Modal from "../../components/Modal";
 import UserForm from "../../components/UserForm";
 
@@ -80,7 +80,16 @@ export default function AdminArtists() {
     closeModal();
   }
 
-  // Filtrage par recherche et statut
+  function toggleStatus(artist: Artist) {
+    setArtists((prev) =>
+      prev.map((a) =>
+        a.id === artist.id
+          ? { ...a, status: a.status === "actif" ? "suspendu" : "actif" }
+          : a
+      )
+    );
+  }
+
   const filteredArtists = artists.filter((a) => {
     const matchesSearch =
       a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -143,41 +152,39 @@ export default function AdminArtists() {
                 </td>
               </tr>
             ) : (
-              filteredArtists.map(({ id, name, email, status }) => (
+              filteredArtists.map((artist) => (
                 <tr
-                  key={id}
+                  key={artist.id}
                   className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
                 >
-                  <td className="py-3 px-4">{name}</td>
-                  <td className="py-3 px-4">{email}</td>
+                  <td className="py-3 px-4">{artist.name}</td>
+                  <td className="py-3 px-4">{artist.email}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[status]}`}
+                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[artist.status]}`}
                     >
-                      {status}
+                      {artist.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 flex space-x-2">
-                    <button
-                      onClick={() => openEditModal({ id, name, email, status })}
-                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                      aria-label={`Modifier ${name}`}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                      aria-label="Actions"
-                    >
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => openDeleteModal({ id, name, email, status })}
-                      className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
-                      aria-label={`Supprimer ${name}`}
-                    >
-                      🗑️
-                    </button>
+                  <td className="py-3 px-4">
+                    <ActionsMenu
+                      actions={[
+                        {
+                          label: "Modifier",
+                          onClick: () => openEditModal(artist),
+                        },
+                        {
+                          label:
+                            artist.status === "actif" ? "Suspendre" : "Activer",
+                          onClick: () => toggleStatus(artist),
+                        },
+                        {
+                          label: "Supprimer",
+                          onClick: () => openDeleteModal(artist),
+                          color: "text-red-500",
+                        },
+                      ]}
+                    />
                   </td>
                 </tr>
               ))

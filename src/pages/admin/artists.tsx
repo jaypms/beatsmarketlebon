@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
 import Modal from "../../components/Modal";
 import ArtistForm from "../../components/ArtistForm";
+import SearchFilter from "../../components/SearchFilter";
 
 type Artist = {
   id: number;
@@ -22,11 +23,16 @@ const statusColors: Record<Artist["status"], string> = {
   en attente: "bg-yellow-400",
 };
 
+const statusOptions: Artist["status"][] = ["actif", "suspendu", "en attente"];
+
 export default function AdminArtists() {
   const [artists, setArtists] = useState<Artist[]>(initialArtists);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   function openAddModal() {
     setSelectedArtist(null);
@@ -73,9 +79,18 @@ export default function AdminArtists() {
     closeModal();
   }
 
+  // Filtrage par recherche et statut
+  const filteredArtists = artists.filter((a) => {
+    const matchesSearch =
+      a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter ? a.status === statusFilter : true;
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <main className="bg-[#1A1B1F] text-white min-h-screen px-8 py-12 max-w-7xl mx-auto font-['PT_Sans', 'Poppins']">
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Gestion des artistes</h1>
         <button
           className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded font-semibold transition-colors"
@@ -85,6 +100,15 @@ export default function AdminArtists() {
           + Ajouter un artiste
         </button>
       </header>
+
+      <SearchFilter
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        statuses={statusOptions}
+        placeholder="Rechercher artiste..."
+      />
 
       <section className="overflow-x-auto">
         <table className="min-w-full border-collapse">
@@ -97,44 +121,52 @@ export default function AdminArtists() {
             </tr>
           </thead>
           <tbody>
-            {artists.map(({ id, name, email, status }) => (
-              <tr
-                key={id}
-                className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
-              >
-                <td className="py-3 px-4">{name}</td>
-                <td className="py-3 px-4">{email}</td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[status]}`}
-                  >
-                    {status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 flex space-x-2">
-                  <button
-                    onClick={() => openEditModal({ id, name, email, status })}
-                    className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                    aria-label={`Modifier ${name}`}
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                    aria-label="Actions"
-                  >
-                    <MoreVertical className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal({ id, name, email, status })}
-                    className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
-                    aria-label={`Supprimer ${name}`}
-                  >
-                    🗑️
-                  </button>
+            {filteredArtists.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center py-6 text-gray-400">
+                  Aucun artiste trouvé.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredArtists.map(({ id, name, email, status }) => (
+                <tr
+                  key={id}
+                  className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
+                >
+                  <td className="py-3 px-4">{name}</td>
+                  <td className="py-3 px-4">{email}</td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[status]}`}
+                    >
+                      {status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 flex space-x-2">
+                    <button
+                      onClick={() => openEditModal({ id, name, email, status })}
+                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
+                      aria-label={`Modifier ${name}`}
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
+                      aria-label="Actions"
+                    >
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal({ id, name, email, status })}
+                      className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
+                      aria-label={`Supprimer ${name}`}
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>

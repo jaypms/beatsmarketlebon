@@ -1,87 +1,139 @@
-import React from "react";
-import {
-  BarChart2,
-  Users,
-  DollarSign,
-  Music,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+
+type Kpi = {
+  label: string;
+  value: number;
+  changePercent?: number; // positif ou négatif
+};
+
+type Sale = {
+  id: number;
+  beatTitle: string;
+  buyer: string;
+  date: string;
+  amount: number;
+  license: string;
+};
 
 export default function AdminDashboard() {
-  // Données KPI simulées
-  const kpis = [
-    { id: 1, icon: <Users className="w-6 h-6 text-pink-500" />, label: "Utilisateurs actifs", value: 1287 },
-    { id: 2, icon: <DollarSign className="w-6 h-6 text-pink-500" />, label: "Revenus ce mois", value: "12 350 €" },
-    { id: 3, icon: <Music className="w-6 h-6 text-pink-500" />, label: "Beats vendus", value: 342 },
-    { id: 4, icon: <CheckCircle className="w-6 h-6 text-pink-500" />, label: "Licences validées", value: 298 },
-    { id: 5, icon: <AlertCircle className="w-6 h-6 text-pink-500" />, label: "Tickets ouverts", value: 14 },
-  ];
+  const [kpis, setKpis] = useState<Kpi[]>([]);
+  const [recentSales, setRecentSales] = useState<Sale[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Données ventes récentes simulées
-  const recentSales = [
-    { id: 1, buyer: "ArtisteX", beat: "Flow puissant", price: "49,90 €", date: "2025-07-20" },
-    { id: 2, buyer: "MC Nova", beat: "Beat de feu", price: "29,90 €", date: "2025-07-19" },
-    { id: 3, buyer: "DJ Cool", beat: "Chill vibes", price: "19,90 €", date: "2025-07-18" },
-  ];
+  // Simuler fetch des données
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setKpis([
+        { label: "Total des ventes", value: 1530, changePercent: 12.5 },
+        { label: "Beatmakers actifs", value: 47 },
+        { label: "Artistes inscrits", value: 120 },
+        { label: "Revenu ce mois", value: 4230, changePercent: -3.2 },
+      ]);
+
+      setRecentSales([
+        {
+          id: 1,
+          beatTitle: "Sunset Vibes",
+          buyer: "Alice Dupont",
+          date: "2025-07-20",
+          amount: 29.99,
+          license: "Premium WAV",
+        },
+        {
+          id: 2,
+          beatTitle: "Night Drive",
+          buyer: "Bob Martin",
+          date: "2025-07-18",
+          amount: 19.99,
+          license: "Basique MP3",
+        },
+        {
+          id: 3,
+          beatTitle: "Urban Flow",
+          buyer: "Carla Ruiz",
+          date: "2025-07-15",
+          amount: 49.99,
+          license: "Exclusive",
+        },
+      ]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  function formatCurrency(value: number) {
+    return value.toLocaleString("fr-FR", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+    });
+  }
 
   return (
-    <main className="bg-[#1A1B1F] text-white min-h-screen px-8 py-12 max-w-7xl mx-auto font-['PT_Sans', 'Poppins']">
-      <h1 className="text-4xl font-bold mb-10">Dashboard Admin</h1>
+    <main className="min-h-screen bg-[#1A1B1F] text-white font-['Poppins'] max-w-7xl mx-auto p-8">
+      <h1 className="text-4xl font-bold mb-8">Tableau de bord Admin</h1>
 
-      {/* KPIs */}
-      <section className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
-        {kpis.map(({ id, icon, label, value }) => (
-          <div
-            key={id}
-            className="bg-[#27282D] rounded-lg p-6 flex items-center space-x-4 shadow-md"
-          >
-            <div className="p-3 bg-pink-600 rounded-full">{icon}</div>
-            <div>
-              <p className="text-gray-400 font-semibold">{label}</p>
-              <p className="text-2xl font-bold">{value}</p>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Graphique des revenus (placeholder) */}
-      <section className="bg-[#27282D] rounded-lg p-6 mb-12 shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Revenus mensuels</h2>
-        <div className="h-48 flex justify-center items-center text-gray-500 italic">
-          {/* Ici, intégrer un graphique réel (ex : recharts, chart.js) */}
-          <BarChart2 size={48} />
-          <span className="ml-3">Graphique à intégrer</span>
-        </div>
-      </section>
-
-      {/* Ventes récentes */}
-      <section className="bg-[#27282D] rounded-lg p-6 shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Ventes récentes</h2>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-600">
-              <th className="py-2 px-4">Acheteur</th>
-              <th className="py-2 px-4">Beat</th>
-              <th className="py-2 px-4">Prix</th>
-              <th className="py-2 px-4">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentSales.map(({ id, buyer, beat, price, date }) => (
-              <tr
-                key={id}
-                className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
+      {loading ? (
+        <p>Chargement des données...</p>
+      ) : (
+        <>
+          <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            {kpis.map(({ label, value, changePercent }) => (
+              <div
+                key={label}
+                className="bg-[#2B2C31] p-6 rounded-lg shadow-md flex flex-col justify-center items-center"
               >
-                <td className="py-2 px-4">{buyer}</td>
-                <td className="py-2 px-4">{beat}</td>
-                <td className="py-2 px-4">{price}</td>
-                <td className="py-2 px-4">{date}</td>
-              </tr>
+                <p className="text-sm text-gray-400 mb-2">{label}</p>
+                <p className="text-3xl font-bold">
+                  {label.includes("vente") || label.includes("Revenu")
+                    ? formatCurrency(value)
+                    : value}
+                </p>
+                {typeof changePercent === "number" && (
+                  <p
+                    className={`mt-1 text-sm font-semibold ${
+                      changePercent > 0 ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
+                    {changePercent > 0 ? "▲" : "▼"} {Math.abs(changePercent)}%
+                  </p>
+                )}
+              </div>
             ))}
-          </tbody>
-        </table>
-      </section>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Ventes récentes</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse bg-[#2B2C31] rounded-lg overflow-hidden">
+                <thead>
+                  <tr className="bg-[#3C3D43] text-left">
+                    <th className="py-3 px-4">Titre du beat</th>
+                    <th className="py-3 px-4">Acheteur</th>
+                    <th className="py-3 px-4">Date</th>
+                    <th className="py-3 px-4">Licence</th>
+                    <th className="py-3 px-4">Montant</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentSales.map(({ id, beatTitle, buyer, date, amount, license }) => (
+                    <tr
+                      key={id}
+                      className="border-b border-gray-600 hover:bg-[#3B3B42] transition-colors"
+                    >
+                      <td className="py-3 px-4">{beatTitle}</td>
+                      <td className="py-3 px-4">{buyer}</td>
+                      <td className="py-3 px-4">{new Date(date).toLocaleDateString("fr-FR")}</td>
+                      <td className="py-3 px-4">{license}</td>
+                      <td className="py-3 px-4">{formatCurrency(amount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
+      )}
     </main>
   );
 }

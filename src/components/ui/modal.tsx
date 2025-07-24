@@ -1,28 +1,28 @@
-"use client"
+import { ReactNode } from "react";
+import { X } from "lucide-react";
 
-import * as React from "react"
-import * as Dialog from "@radix-ui/react-dialog"
-import { cn } from "@/lib/utils"
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+}
 
-export const Modal = ({
-  children,
-  open,
-  onOpenChange,
-}: {
-  children: React.ReactNode
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}) => {
+export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+  if (!isOpen) return null;
+
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
-      <Dialog.Content
-        className={cn(
-          "fixed left-[50%] top-[50%] z-50 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md border border-border bg-background p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-        )}
-      >
-        {children}
-      </Dialog.Content>
-    </Dialog.Root>
-  )
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div className="w-full max-w-lg rounded-2xl bg-zinc-900 p-6 shadow-xl relative">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
+        <div>{children}</div>
+      </div>
+    </div>
+  );
 }

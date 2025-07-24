@@ -114,8 +114,64 @@ export default function TermsPage() {
           Article 11 – Limitations techniques
         </h2>
         <p>
-          La taille maximale autorisée pour les fichiers MP3, WAV et Stems est fixée à 60 Mo par
-          fichier. Le système accepte plusieurs fichiers pour les Stems.
+          La taille maximale autorisée pour les fichiers est la suivante :<br />
+          - MP3 : jusqu’à 15 Mo par fichier.<br />
+          - WAV : jusqu’à 100 Mo par fichier.<br />
+          - Stems (multipistes) : jusqu’à 60 Mo par piste individuelle. Le système accepte plusieurs fichiers distincts pour les pistes.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 12 – Politique de remboursement
+        </h2>
+        <p>
+          Aucun remboursement n’est possible après téléchargement du beat ou utilisation d’un service. En cas de problème technique avéré, une solution adaptée pourra être proposée.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 13 – Suspension ou suppression de compte
+        </h2>
+        <p>
+          BeatsMarket se réserve le droit de suspendre ou supprimer un compte en cas de non-respect des CGVU, fraude, ou comportement nuisible à la plateforme ou à ses utilisateurs.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 14 – Sécurité et sauvegardes
+        </h2>
+        <p>
+          Des sauvegardes automatiques sont effectuées régulièrement. Les données sont stockées de manière sécurisée et chiffrée. L’utilisateur peut demander une restauration dans certains cas.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 15 – Données personnelles
+        </h2>
+        <p>
+          Les données collectées sont utilisées uniquement dans le cadre des services proposés par BeatsMarket. L’utilisateur peut demander l’accès, la modification ou la suppression de ses données.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 16 – Modifications des CGVU
+        </h2>
+        <p>
+          BeatsMarket peut modifier les présentes CGVU à tout moment. Les utilisateurs seront informés via la plateforme. L’utilisation des services après modification implique acceptation.
+        </p>
+      </div>
+
+      <div>
+        <h2 className="text-xl md:text-2xl font-semibold font-['Poppins'] mb-2">
+          Article 17 – Droit applicable
+        </h2>
+        <p>
+          Les présentes CGVU sont soumises au droit français. En cas de litige, une solution amiable sera privilégiée avant tout recours judiciaire auprès des tribunaux compétents.
         </p>
       </div>
     </section>

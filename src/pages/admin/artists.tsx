@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
 import Modal from "../../components/Modal";
-import ArtistForm from "../../components/ArtistForm";
-import SearchFilter from "../../components/SearchFilter";
+import UserForm from "../../components/UserForm";
+
+type Status = "actif" | "suspendu" | "en attente";
 
 type Artist = {
   id: number;
   name: string;
   email: string;
-  status: "actif" | "suspendu" | "en attente";
+  status: Status;
 };
 
 const initialArtists: Artist[] = [
@@ -17,13 +18,13 @@ const initialArtists: Artist[] = [
   { id: 3, name: "Carla Ruiz", email: "carla@example.com", status: "suspendu" },
 ];
 
-const statusColors: Record<Artist["status"], string> = {
+const statusColors: Record<Status, string> = {
   actif: "bg-green-500",
   suspendu: "bg-red-500",
   en attente: "bg-yellow-400",
 };
 
-const statusOptions: Artist["status"][] = ["actif", "suspendu", "en attente"];
+const statusOptions: Status[] = ["actif", "suspendu", "en attente"];
 
 export default function AdminArtists() {
   const [artists, setArtists] = useState<Artist[]>(initialArtists);
@@ -64,11 +65,11 @@ export default function AdminArtists() {
     }
   }
 
-  function handleFormSubmit(data: Omit<Artist, "id"> | Artist) {
+  function handleFormSubmit(data: Omit<Artist, "id">) {
     if (modalMode === "add") {
-      const newArtist = {
-        ...(data as Omit<Artist, "id">),
-        id: Math.max(...artists.map((a) => a.id)) + 1,
+      const newArtist: Artist = {
+        id: Math.max(0, ...artists.map((a) => a.id)) + 1,
+        ...data,
       };
       setArtists((prev) => [...prev, newArtist]);
     } else if (modalMode === "edit" && selectedArtist) {
@@ -101,14 +102,28 @@ export default function AdminArtists() {
         </button>
       </header>
 
-      <SearchFilter
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
-        statuses={statusOptions}
-        placeholder="Rechercher artiste..."
-      />
+      <div className="flex flex-wrap items-center gap-4 mb-6">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Rechercher artiste..."
+          className="px-3 py-2 rounded bg-[#1A1B1F] border border-gray-600 text-white focus:border-pink-500 flex-grow min-w-[200px]"
+        />
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-3 py-2 rounded bg-[#1A1B1F] border border-gray-600 text-white focus:border-pink-500"
+        >
+          <option value="">Tous statuts</option>
+          {statusOptions.map((status) => (
+            <option key={status} value={status}>
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <section className="overflow-x-auto">
         <table className="min-w-full border-collapse">
@@ -206,13 +221,16 @@ export default function AdminArtists() {
             <strong>{selectedArtist?.name}</strong> ? Cette action est irréversible.
           </p>
         ) : (
-          <ArtistForm
-            initialData={modalMode === "edit" ? selectedArtist || undefined : undefined}
+          <UserForm
+            initialData={
+              modalMode === "edit"
+                ? {
+                    name: selectedArtist?.name || "",
+                    email: selectedArtist?.email || "",
+                    status: selectedArtist?.status || "en attente",
+                  }
+                : undefined
+            }
             onCancel={closeModal}
             onSubmit={handleFormSubmit}
-          />
-        )}
-      </Modal>
-    </main>
-  );
-}
+            submitLabel={modalMode === "edit" ? "Modifier" :

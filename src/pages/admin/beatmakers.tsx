@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import ActionsMenu from "../../components/ActionsMenu";
 import Modal from "../../components/Modal";
 import UserForm from "../../components/UserForm";
 
@@ -10,13 +10,13 @@ type Beatmaker = {
   name: string;
   email: string;
   status: Status;
-  beatsCount: number;
+  genre?: string;
 };
 
 const initialBeatmakers: Beatmaker[] = [
-  { id: 1, name: "Jay Jay", email: "jayjay@example.com", status: "actif", beatsCount: 15 },
-  { id: 2, name: "Lina", email: "lina@example.com", status: "en attente", beatsCount: 5 },
-  { id: 3, name: "Tommy", email: "tommy@example.com", status: "suspendu", beatsCount: 8 },
+  { id: 1, name: "Jean Beat", email: "jean@example.com", status: "actif", genre: "Hip-Hop" },
+  { id: 2, name: "Lina Sound", email: "lina@example.com", status: "en attente", genre: "Trap" },
+  { id: 3, name: "Mike Prod", email: "mike@example.com", status: "suspendu", genre: "Pop" },
 ];
 
 const statusColors: Record<Status, string> = {
@@ -66,11 +66,10 @@ export default function AdminBeatmakers() {
     }
   }
 
-  function handleFormSubmit(data: Omit<Beatmaker, "id" | "beatsCount"> & Partial<Pick<Beatmaker, "beatsCount">>) {
+  function handleFormSubmit(data: Omit<Beatmaker, "id">) {
     if (modalMode === "add") {
       const newBeatmaker: Beatmaker = {
         id: Math.max(0, ...beatmakers.map((b) => b.id)) + 1,
-        beatsCount: 0,
         ...data,
       };
       setBeatmakers((prev) => [...prev, newBeatmaker]);
@@ -82,7 +81,17 @@ export default function AdminBeatmakers() {
     closeModal();
   }
 
-  // Filtrage par recherche et statut
+  // Bascule entre "actif" et "suspendu"
+  function toggleStatus(beatmaker: Beatmaker) {
+    setBeatmakers((prev) =>
+      prev.map((b) =>
+        b.id === beatmaker.id
+          ? { ...b, status: b.status === "actif" ? "suspendu" : "actif" }
+          : b
+      )
+    );
+  }
+
   const filteredBeatmakers = beatmakers.filter((b) => {
     const matchesSearch =
       b.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -133,7 +142,7 @@ export default function AdminBeatmakers() {
             <tr className="border-b border-gray-600">
               <th className="text-left py-3 px-4">Nom</th>
               <th className="text-left py-3 px-4">Email</th>
-              <th className="text-left py-3 px-4">Nombre de beats</th>
+              <th className="text-left py-3 px-4">Genre</th>
               <th className="text-left py-3 px-4">Statut</th>
               <th className="text-left py-3 px-4">Actions</th>
             </tr>
@@ -146,42 +155,48 @@ export default function AdminBeatmakers() {
                 </td>
               </tr>
             ) : (
-              filteredBeatmakers.map(({ id, name, email, status, beatsCount }) => (
+              filteredBeatmakers.map((beatmaker) => (
                 <tr
-                  key={id}
+                  key={beatmaker.id}
                   className="border-b border-gray-700 hover:bg-[#34343B] transition-colors"
                 >
-                  <td className="py-3 px-4">{name}</td>
-                  <td className="py-3 px-4">{email}</td>
-                  <td className="py-3 px-4">{beatsCount}</td>
+                  <td className="py-3 px-4">{beatmaker.name}</td>
+                  <td className="py-3 px-4">{beatmaker.email}</td>
+                  <td className="py-3 px-4">{beatmaker.genre || "-"}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${statusColors[status]}`}
+                      className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                        {
+                          actif: "bg-green-500",
+                          suspendu: "bg-red-500",
+                          "en attente": "bg-yellow-400",
+                        }[beatmaker.status]
+                      }`}
                     >
-                      {status}
+                      {beatmaker.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 flex space-x-2">
-                    <button
-                      onClick={() => openEditModal({ id, name, email, status, beatsCount })}
-                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                      aria-label={`Modifier ${name}`}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
-                      aria-label="Actions"
-                    >
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => openDeleteModal({ id, name, email, status, beatsCount })}
-                      className="p-2 rounded hover:bg-red-700 text-red-500 transition-colors"
-                      aria-label={`Supprimer ${name}`}
-                    >
-                      🗑️
-                    </button>
+                  <td className="py-3 px-4">
+                    <ActionsMenu
+                      actions={[
+                        {
+                          label: "Modifier",
+                          onClick: () => openEditModal(beatmaker),
+                        },
+                        {
+                          label:
+                            beatmaker.status === "actif"
+                              ? "Suspendre"
+                              : "Activer",
+                          onClick: () => toggleStatus(beatmaker),
+                        },
+                        {
+                          label: "Supprimer",
+                          onClick: () => openDeleteModal(beatmaker),
+                          color: "text-red-500",
+                        },
+                      ]}
+                    />
                   </td>
                 </tr>
               ))
@@ -232,6 +247,7 @@ export default function AdminBeatmakers() {
                     name: selectedBeatmaker?.name || "",
                     email: selectedBeatmaker?.email || "",
                     status: selectedBeatmaker?.status || "en attente",
+                    genre: selectedBeatmaker?.genre || "",
                   }
                 : undefined
             }

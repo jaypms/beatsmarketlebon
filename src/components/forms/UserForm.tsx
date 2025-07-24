@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface UserFormProps {
-  initialData?: {
+  initialValues?: {
     name: string;
     email: string;
     status: "actif" | "suspendu" | "en_attente";
@@ -13,58 +13,61 @@ interface UserFormProps {
   onCancel: () => void;
 }
 
-export default function UserForm({ initialData, onSubmit, onCancel }: UserFormProps) {
-  const [name, setName] = useState(initialData?.name || "");
-  const [email, setEmail] = useState(initialData?.email || "");
-  const [status, setStatus] = useState(initialData?.status || "actif");
+export default function UserForm({
+  initialValues,
+  onSubmit,
+  onCancel,
+}: UserFormProps) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("actif");
+
+  useEffect(() => {
+    if (initialValues) {
+      setName(initialValues.name);
+      setEmail(initialValues.email);
+      setStatus(initialValues.status);
+    }
+  }, [initialValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
     onSubmit({ name, email, status });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Label htmlFor="name">Nom</Label>
+        <Label>Nom</Label>
         <Input
-          id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nom complet"
           required
         />
       </div>
-
       <div>
-        <Label htmlFor="email">Email</Label>
+        <Label>Email</Label>
         <Input
-          id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Adresse email"
           required
         />
       </div>
-
       <div>
-        <Label htmlFor="status">Statut</Label>
+        <Label>Statut</Label>
         <select
-          id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="w-full rounded-md bg-zinc-800 text-white px-3 py-2"
+          className="w-full bg-zinc-800 text-white p-2 rounded-lg"
         >
           <option value="actif">Actif</option>
           <option value="suspendu">Suspendu</option>
           <option value="en_attente">En attente</option>
         </select>
       </div>
-
-      <div className="flex justify-end gap-2 pt-4">
-        <Button variant="outline" type="button" onClick={onCancel}>
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="ghost" onClick={onCancel}>
           Annuler
         </Button>
         <Button type="submit">Enregistrer</Button>

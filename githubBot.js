@@ -1,33 +1,40 @@
-import fetch from "node-fetch";
+import { Octokit } from "octokit";
+import dotenv from "dotenv";
 
-const GITHUB_API_URL = "https://api.github.com";
-const REPO_OWNER = "jaypms";
-const REPO_NAME = "beatsmarketlebon";
-const TOKEN = process.env.GITHUB_TOKEN;
+dotenv.config(); // Charge les variables d’environnement depuis .env ou .env.local
 
-async function createIssue(title, body) {
-  const res = await fetch(`${GITHUB_API_URL}/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
-    method: "POST",
-    headers: {
-      "Authorization": `token ${TOKEN}`,
-      "Accept": "application/vnd.github.v3+json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      body,
-    }),
-  });
+const token = process.env.GITHUB_TOKEN;
 
-  if (!res.ok) {
-    const error = await res.text();
-    throw new Error(`GitHub API error: ${res.status} - ${error}`);
-  }
-
-  const data = await res.json();
-  console.log(`✅ Issue créée : ${data.html_url}`);
+if (!token) {
+  console.error("❌ Erreur : Le token GitHub GITHUB_TOKEN n’est pas défini dans l’environnement.");
+  process.exit(1);
 }
 
-// Exemple d'utilisation :
-createIssue("Test auto via script", "Cette issue a été créée depuis Node.js via API GitHub.")
-  .catch(err => console.error("❌ Erreur :", err));
+// Arguments CLI : node githubBot.js "Titre de l’issue" "Description détaillée"
+const [,, title, body] = process.argv;
+
+if (!title || !body) {
+  console.error("❌ Usage : node githubBot.js \"Titre de l’issue\" \"Description détaillée\"");
+  process.exit(1);
+}
+
+const octokit = new Octokit({ auth: token });
+
+async function createIssue() {
+  try {
+    const response = await octokit.rest.issues.create({
+      owner: "jaypms",        // Ton compte GitHub
+      repo: "beatsmarketlebon", // Le nom du repo
+      title,
+      body,
+    });
+    console.log(`✅ Issue créée avec succès : ${response.data.html_url}`);
+  } catch (error) {
+    console.error("❌ Erreur lors de la création de l’issue :", error.message);
+    if (error.status) {
+      console.error(`Status: ${error.status}`);
+    }
+  }
+}
+
+createIssue();

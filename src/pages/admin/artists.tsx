@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
 import Modal from "../../components/Modal";
+import ArtistForm from "../../components/ArtistForm";
 
 type Artist = {
   id: number;
@@ -24,23 +25,52 @@ const statusColors: Record<Artist["status"], string> = {
 export default function AdminArtists() {
   const [artists, setArtists] = useState<Artist[]>(initialArtists);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [artistToDelete, setArtistToDelete] = useState<Artist | null>(null);
+  const [modalMode, setModalMode] = useState<"add" | "edit" | "delete">("add");
+  const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
+
+  function openAddModal() {
+    setSelectedArtist(null);
+    setModalMode("add");
+    setIsModalOpen(true);
+  }
+
+  function openEditModal(artist: Artist) {
+    setSelectedArtist(artist);
+    setModalMode("edit");
+    setIsModalOpen(true);
+  }
 
   function openDeleteModal(artist: Artist) {
-    setArtistToDelete(artist);
+    setSelectedArtist(artist);
+    setModalMode("delete");
     setIsModalOpen(true);
   }
 
   function closeModal() {
     setIsModalOpen(false);
-    setArtistToDelete(null);
+    setSelectedArtist(null);
   }
 
-  function confirmDelete() {
-    if (artistToDelete) {
-      setArtists((prev) => prev.filter((a) => a.id !== artistToDelete.id));
+  function handleDeleteConfirm() {
+    if (selectedArtist) {
+      setArtists((prev) => prev.filter((a) => a.id !== selectedArtist.id));
       closeModal();
     }
+  }
+
+  function handleFormSubmit(data: Omit<Artist, "id"> | Artist) {
+    if (modalMode === "add") {
+      const newArtist = {
+        ...(data as Omit<Artist, "id">),
+        id: Math.max(...artists.map((a) => a.id)) + 1,
+      };
+      setArtists((prev) => [...prev, newArtist]);
+    } else if (modalMode === "edit" && selectedArtist) {
+      setArtists((prev) =>
+        prev.map((a) => (a.id === selectedArtist.id ? { ...a, ...data } : a))
+      );
+    }
+    closeModal();
   }
 
   return (
@@ -50,6 +80,7 @@ export default function AdminArtists() {
         <button
           className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded font-semibold transition-colors"
           type="button"
+          onClick={openAddModal}
         >
           + Ajouter un artiste
         </button>
@@ -82,6 +113,13 @@ export default function AdminArtists() {
                 </td>
                 <td className="py-3 px-4 flex space-x-2">
                   <button
+                    onClick={() => openEditModal({ id, name, email, status })}
+                    className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
+                    aria-label={`Modifier ${name}`}
+                  >
+                    ✏️
+                  </button>
+                  <button
                     className="p-2 rounded hover:bg-[#3B3B42] transition-colors"
                     aria-label="Actions"
                   >
@@ -104,28 +142,44 @@ export default function AdminArtists() {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        title="Confirmation de suppression"
+        title={
+          modalMode === "add"
+            ? "Ajouter un artiste"
+            : modalMode === "edit"
+            ? "Modifier un artiste"
+            : "Confirmation de suppression"
+        }
         footer={
-          <>
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-colors"
-            >
-              Annuler
-            </button>
-            <button
-              onClick={confirmDelete}
-              className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
-            >
-              Supprimer
-            </button>
-          </>
+          modalMode === "delete" ? (
+            <>
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition-colors"
+              >
+                Supprimer
+              </button>
+            </>
+          ) : null
         }
       >
-        <p>
-          Êtes-vous sûr de vouloir supprimer l’artiste{" "}
-          <strong>{artistToDelete?.name}</strong> ? Cette action est irréversible.
-        </p>
+        {modalMode === "delete" ? (
+          <p>
+            Êtes-vous sûr de vouloir supprimer l’artiste{" "}
+            <strong>{selectedArtist?.name}</strong> ? Cette action est irréversible.
+          </p>
+        ) : (
+          <ArtistForm
+            initialData={modalMode === "edit" ? selectedArtist || undefined : undefined}
+            onCancel={closeModal}
+            onSubmit={handleFormSubmit}
+          />
+        )}
       </Modal>
     </main>
   );

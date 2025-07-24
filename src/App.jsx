@@ -1,11 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h1>Bienvenue sur BeatsMarket avec Vite + React !</h1>
+    <div style={{ padding: 20 }}>
+      <h1>Bienvenue sur BeatsMarket</h1>
+      <p>Ton application Vite + React est prête !</p>
     </div>
-  )
+  );
 }
-
-export default App

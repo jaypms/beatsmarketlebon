@@ -1,28 +1,53 @@
-"use client"
+import { ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 
-import * as React from "react"
-import * as Dialog from "@radix-ui/react-dialog"
-import { cn } from "@/lib/utils"
+interface ModalProps {
+  title?: string;
+  children: ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+  width?: string;
+}
 
-export const Modal = ({
+export default function Modal({
+  title,
   children,
-  open,
-  onOpenChange,
-}: {
-  children: React.ReactNode
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}) => {
-  return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
-      <Dialog.Content
-        className={cn(
-          "fixed left-[50%] top-[50%] z-50 w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md border border-border bg-background p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-        )}
+  isOpen,
+  onClose,
+  width = "max-w-lg",
+}: ModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div
+        className={`relative bg-zinc-900 rounded-xl shadow-xl w-full ${width} p-6`}
       >
-        {children}
-      </Dialog.Content>
-    </Dialog.Root>
-  )
+        {title && (
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            <button
+              onClick={onClose}
+              className="text-zinc-400 hover:text-white transition"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        )}
+        <div>{children}</div>
+      </div>
+    </div>,
+    document.body
+  );
 }

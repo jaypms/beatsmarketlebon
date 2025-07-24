@@ -233,4 +233,10 @@ export default function AdminArtists() {
             }
             onCancel={closeModal}
             onSubmit={handleFormSubmit}
-            submitLabel={modalMode === "edit" ? "Modifier" :
+            submitLabel={modalMode === "edit" ? "Modifier" : "Ajouter"}
+          />
+        )}
+      </Modal>
+    </main>
+  );
+}

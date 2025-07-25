@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { BeatCard } from "./BeatCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { BeatCard } from "@/components/BeatCard";
 
 interface Beat {
   id: string;
@@ -14,64 +13,41 @@ interface Beat {
   status: "published" | "draft" | "archived";
 }
 
-export default function BeatsPage() {
-  const [beats, setBeats] = useState<Beat[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    // Charger les beats via API (simulation)
-    const initialBeats: Beat[] = [
-      {
-        id: "1",
-        title: "Beat Funky Groove",
-        price: 20,
-        licenses: ["basique", "premium"],
-        coverUrl: "/beats/beat1.jpg",
-        status: "published",
-      },
-      {
-        id: "2",
-        title: "Trap Vibes",
-        price: 15,
-        licenses: ["basique"],
-        coverUrl: "/beats/beat2.jpg",
-        status: "draft",
-      },
-    ];
-    setBeats(initialBeats);
-  }, []);
-
-  const filteredBeats = beats.filter((beat) =>
-    beat.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+export default function BeatmakerBeatsPage() {
+  const [beats, setBeats] = useState<Beat[]>([
+    {
+      id: "1",
+      title: "Beat Hip Hop Chill",
+      price: 15,
+      licenses: ["Basique", "Premium", "Exclusive"],
+      coverUrl: "/images/beats/hiphop-chill.jpg",
+      status: "published",
+    },
+    {
+      id: "2",
+      title: "Trap Energy",
+      price: 20,
+      licenses: ["Basique", "Premium"],
+      status: "draft",
+    },
+  ]);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Mes Beats</h1>
-        <Button onClick={() => alert("Ouvrir modal création beat")}>
-          Ajouter un Beat
-        </Button>
+        <Button onClick={() => alert("Ajouter un nouveau beat")}>Ajouter un beat</Button>
       </div>
 
-      <Input
-        placeholder="Rechercher un beat..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="max-w-md"
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredBeats.length === 0 && (
-          <p className="col-span-full text-center text-gray-500">
-            Aucun beat trouvé.
-          </p>
-        )}
-
-        {filteredBeats.map((beat) => (
-          <BeatCard key={beat.id} beat={beat} />
-        ))}
-      </div>
+      {beats.length === 0 ? (
+        <p>Vous n'avez pas encore ajouté de beats.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {beats.map((beat) => (
+            <BeatCard key={beat.id} beat={beat} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

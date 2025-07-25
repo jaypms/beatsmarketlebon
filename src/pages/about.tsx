@@ -1,75 +1,84 @@
-import React from "react";
-import { LucideIcon, ShoppingCart, Cpu, Database, Settings, Users } from "lucide-react";
+import { BadgeCheck, LayoutDashboard, Music, Share2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function AboutPage() {
   return (
-    <main className="bg-[#1A1B1F] text-white min-h-screen px-6 py-12 max-w-6xl mx-auto font-['PT_Sans', 'Poppins']">
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold font-['Poppins'] mb-4">
-          À Propos de BeatsMarket
-        </h1>
-        <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-gray-300">
-          BeatsMarket est une plateforme innovante réunissant beatmakers et artistes pour
-          créer, partager et monétiser leurs productions musicales dans un univers moderne
-          et convivial.
-        </p>
-      </header>
+    <div className="min-h-screen bg-background text-foreground px-4 py-10 md:px-20">
+      <div className="max-w-4xl mx-auto space-y-12">
+        <section className="text-center space-y-4">
+          <h1 className="text-4xl md:text-5xl font-bold">À propos de BeatsMarket</h1>
+          <p className="text-lg md:text-xl text-muted-foreground">
+            BeatsMarket est bien plus qu’une simple marketplace. C’est un écosystème complet, conçu pour donner aux beatmakers et aux artistes indépendants les outils les plus modernes pour vendre, collaborer et évoluer.
+          </p>
+        </section>
 
-      <section className="mb-16 space-y-8 text-center max-w-4xl mx-auto font-['PT_Sans']">
-        <h2 className="text-3xl font-semibold mb-6">Notre vision</h2>
-        <p className="text-gray-300 leading-relaxed text-lg md:text-xl">
-          Créer un écosystème musical où la créativité des beatmakers est valorisée, où les
-          artistes accèdent facilement à des beats de qualité, et où la technologie simplifie
-          chaque étape du processus.
-        </p>
-      </section>
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold">Notre manifeste</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Nous croyons en une musique libre, équitable, indépendante et innovante. Les beatmakers méritent une plateforme qui leur ressemble, avec des outils puissants, une transparence totale sur leurs revenus, et une autonomie complète.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            BeatsMarket est né de ce besoin : un lieu où chaque vente compte, chaque création est protégée, chaque utilisateur est respecté.
+          </p>
+        </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-        {/* Carte outil */}
-        <ToolCard
-          icon={<ShoppingCart className="w-10 h-10 text-pink-500" />}
-          title="Boutique Pro"
-          description="Une boutique intuitive pour gérer vos beats, licences et ventes en toute simplicité."
-        />
-        <ToolCard
-          icon={<Cpu className="w-10 h-10 text-pink-500" />}
-          title="Mastering IA"
-          description="Un service de mastering automatique alimenté par intelligence artificielle pour un son professionnel."
-        />
-        <ToolCard
-          icon={<Database className="w-10 h-10 text-pink-500" />}
-          title="Distribution digitale"
-          description="Diffusez vos morceaux sur les principales plateformes via Believe sans commission."
-        />
-        <ToolCard
-          icon={<Settings className="w-10 h-10 text-pink-500" />}
-          title="Création de covers"
-          description="Générez des pochettes d’album professionnelles avec notre IA de design graphique."
-        />
-        <ToolCard
-          icon={<Users className="w-10 h-10 text-pink-500" />}
-          title="Support dédié"
-          description="Une équipe réactive et experte à votre service pour répondre à toutes vos questions."
-        />
-      </section>
-    </main>
-  );
-}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold">Nos outils pour les créateurs</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="rounded-2xl shadow-lg">
+              <CardContent className="p-6 space-y-3 text-center">
+                <LayoutDashboard className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="font-semibold text-lg">Boutique Pro</h3>
+                <p className="text-sm text-muted-foreground">
+                  Crée ta boutique de beats personnalisée et professionnelle.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl shadow-lg">
+              <CardContent className="p-6 space-y-3 text-center">
+                <BadgeCheck className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="font-semibold text-lg">Mastering IA</h3>
+                <p className="text-sm text-muted-foreground">
+                  Donne un son pro à tes beats en un clic grâce à notre intelligence artificielle.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl shadow-lg">
+              <CardContent className="p-6 space-y-3 text-center">
+                <Music className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="font-semibold text-lg">Covers IA</h3>
+                <p className="text-sm text-muted-foreground">
+                  Génére des visuels pro pour tes beats, EPs ou albums automatiquement.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl shadow-lg">
+              <CardContent className="p-6 space-y-3 text-center">
+                <Share2 className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="font-semibold text-lg">Distribution digitale</h3>
+                <p className="text-sm text-muted-foreground">
+                  Distribue ta musique sur toutes les plateformes sans commission.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-2xl shadow-lg">
+              <CardContent className="p-6 space-y-3 text-center">
+                <Music className="mx-auto h-8 w-8 text-primary" />
+                <h3 className="font-semibold text-lg">Gestion des droits</h3>
+                <p className="text-sm text-muted-foreground">
+                  Déclare tes œuvres et protège tes revenus facilement.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-function ToolCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="bg-[#27282D] rounded-lg p-6 flex flex-col items-center text-center hover:shadow-lg transition-shadow duration-300">
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold mb-2 font-['Poppins']">{title}</h3>
-      <p className="text-gray-300">{description}</p>
+        <section className="text-center pt-10">
+          <p className="text-muted-foreground text-sm">
+            Ensemble, construisons la plateforme musicale de demain.
+          </p>
+        </section>
+      </div>
     </div>
   );
 }

@@ -1,36 +1,33 @@
 import React from "react";
-import { Button } from "./ui/button";
+import { Badge, Button } from "@/components/ui";
+
+interface Beat {
+  id: string;
+  title: string;
+  price: number;
+  licenses: string[];
+  status: string;
+}
 
 interface BeatCardProps {
-  beat: {
-    id: string;
-    title: string;
-    price: number;
-    licenses: string[];
-    status: string;
-  };
+  beat: Beat;
   onEdit: () => void;
   onDelete: () => void;
 }
 
 export const BeatCard: React.FC<BeatCardProps> = ({ beat, onEdit, onDelete }) => {
-  const statusColor = {
-    actif: "bg-green-500",
-    suspendu: "bg-red-500",
-    en_attente: "bg-yellow-500",
-  }[beat.status] || "bg-gray-500";
-
   return (
-    <div className="border rounded-lg p-4 shadow-md">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-xl font-semibold">{beat.title}</h2>
-        <span className={`text-white px-2 py-1 rounded ${statusColor}`}>
-          {beat.status}
-        </span>
+    <div className="border rounded p-4 shadow-sm bg-white dark:bg-gray-800">
+      <h3 className="text-lg font-semibold mb-2">{beat.title}</h3>
+      <p className="mb-2">Prix : {beat.price} €</p>
+      <div className="mb-2 flex flex-wrap gap-2">
+        {beat.licenses.map((license) => (
+          <Badge key={license} variant="secondary">
+            {license}
+          </Badge>
+        ))}
       </div>
-      <p>Prix : {beat.price} €</p>
-      <p>Licences : {beat.licenses.join(", ")}</p>
-      <div className="flex justify-end space-x-2 mt-4">
+      <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onEdit}>
           Modifier
         </Button>

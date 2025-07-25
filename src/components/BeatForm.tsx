@@ -1,88 +1,135 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Select, SelectItem } from "./ui/select";
 
 interface BeatFormProps {
-  beat?: {
-    id: string;
+  beat: {
+    id?: string;
     title: string;
     price: number;
     licenses: string[];
-    coverUrl?: string;
-    status: "actif" | "suspendu";
-  };
-  onSave: (beat: any) => void;
+    status: string;
+  } | null;
+  onSave: (beat: {
+    id?: string;
+    title: string;
+    price: number;
+    licenses: string[];
+    status: string;
+  }) => void;
   onCancel: () => void;
 }
 
-export function BeatForm({ beat, onSave, onCancel }: BeatFormProps) {
-  const [title, setTitle] = useState(beat?.title || "");
-  const [price, setPrice] = useState(beat?.price || 0);
-  const [licenses, setLicenses] = useState<string[]>(beat?.licenses || []);
-  const [status, setStatus] = useState<"actif" | "suspendu">(beat?.status || "actif");
+const licenseOptions = [
+  "Basique MP3",
+  "Premium WAV",
+  "Exclusive",
+  "Exclusive Multipistes",
+];
 
-  const toggleLicense = (license: string) => {
+export const BeatForm: React.FC<BeatFormProps> = ({ beat, onSave, onCancel }) => {
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState(0);
+  const [licenses, setLicenses] = useState<string[]>([]);
+  const [status, setStatus] = useState("actif");
+
+  useEffect(() => {
+    if (beat) {
+      setTitle(beat.title);
+      setPrice(beat.price);
+      setLicenses(beat.licenses);
+      setStatus(beat.status);
+    } else {
+      setTitle("");
+      setPrice(0);
+      setLicenses([]);
+      setStatus("actif");
+    }
+  }, [beat]);
+
+  function toggleLicense(license: string) {
     setLicenses((prev) =>
-      prev.includes(license) ? prev.filter((l) => l !== license) : [...prev, license]
+      prev.includes(license)
+        ? prev.filter((l) => l !== license)
+        : [...prev, license]
     );
-  };
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const id = beat?.id || Math.random().toString(36).substring(2, 9);
-    onSave({ id, title, price, licenses, status });
-  };
+    if (title.trim() === "" || price <= 0) {
+      alert("Veuillez remplir le titre et le prix correctement.");
+      return;
+    }
+    onSave({ id: beat?.id, title, price, licenses, status });
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4">
       <div>
-        <label className="block font-semibold mb-1">Titre du beat</label>
-        <input
-          type="text"
+        <label htmlFor="title" className="block font-medium mb-1">
+          Titre du Beat
+        </label>
+        <Input
+          id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded px-2 py-1"
+          placeholder="Titre de votre beat"
           required
         />
       </div>
       <div>
-        <label className="block font-semibold mb-1">Prix (€)</label>
-        <input
+        <label htmlFor="price" className="block font-medium mb-1">
+          Prix (€)
+        </label>
+        <Input
+          id="price"
           type="number"
-          min={0}
-          step={0.01}
+          min={1}
           value={price}
-          onChange={(e) => setPrice(parseFloat(e.target.value))}
-          className="w-full border rounded px-2 py-1"
+          onChange={(e) => setPrice(Number(e.target.value))}
           required
         />
       </div>
       <div>
-        <label className="block font-semibold mb-1">Licences disponibles</label>
+        <label className="block font-medium mb-1">Licences à vendre</label>
         <div className="flex flex-wrap gap-2">
-          {["Basique MP3", "Premium WAV", "Exclusive", "Exclusive + Stems"].map((license) => (
-            <label key={license} className="inline-flex items-center space-x-1">
+          {licenseOptions.map((license) => (
+            <label
+              key={license}
+              className={`cursor-pointer rounded border px-3 py-1 ${
+                licenses.includes(license)
+                  ? "bg-pink-600 text-white border-pink-600"
+                  : "border-gray-300 text-gray-700"
+              }`}
+            >
               <input
                 type="checkbox"
+                className="hidden"
                 checked={licenses.includes(license)}
                 onChange={() => toggleLicense(license)}
               />
-              <span>{license}</span>
+              {license}
             </label>
           ))}
         </div>
       </div>
       <div>
-        <label className="block font-semibold mb-1">Statut</label>
-        <select
+        <label htmlFor="status" className="block font-medium mb-1">
+          Statut
+        </label>
+        <Select
+          id="status"
           value={status}
-          onChange={(e) => setStatus(e.target.value as "actif" | "suspendu")}
-          className="w-full border rounded px-2 py-1"
+          onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="actif">Actif</option>
-          <option value="suspendu">Suspendu</option>
-        </select>
+          <SelectItem value="actif">Actif</SelectItem>
+          <SelectItem value="suspendu">Suspendu</SelectItem>
+          <SelectItem value="en_attente">En attente</SelectItem>
+        </Select>
       </div>
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end gap-3 mt-4">
         <Button type="button" variant="outline" onClick={onCancel}>
           Annuler
         </Button>
@@ -90,4 +137,4 @@ export function BeatForm({ beat, onSave, onCancel }: BeatFormProps) {
       </div>
     </form>
   );
-}
+};

@@ -1,36 +1,28 @@
-## Déploiement automatique avec GitHub Actions et Vercel
+# BeatsMarket
 
-Ce projet utilise un workflow GitHub Actions pour construire et déployer automatiquement l’application sur Vercel à chaque push sur la branche `main`.
+## 🎧 Présentation
 
-### Configuration requise
+**BeatsMarket** est une plateforme professionnelle dédiée à la vente, à l’achat et à la distribution de beats. Elle connecte les **beatmakers** et les **artistes**, en offrant une marketplace moderne, des outils innovants, et des services automatisés via l’intelligence artificielle.
 
-Avant de pouvoir déployer, il faut configurer les **secrets GitHub** dans les paramètres du dépôt (`Settings > Secrets and variables > Actions`) :
+Pensé pour répondre aux besoins des créateurs musicaux actuels, BeatsMarket combine :
 
-- `VERCEL_ORG_ID` : L’ID de l’organisation Vercel
-- `VERCEL_PROJECT_ID` : L’ID du projet Vercel
-- `VERCEL_TOKEN` : Le token d’accès personnel Vercel (à générer dans [https://vercel.com/account/tokens](https://vercel.com/account/tokens))
-
-### Workflow CI/CD
-
-Le fichier de workflow `.github/workflows/deploy-vercel.yml` contient les étapes suivantes :
-
-1. Checkout du code source
-2. Installation de Node.js
-3. Installation des dépendances (`npm ci`)
-4. Génération automatique de l’index des composants UI (`npm run generate-ui-index`)
-5. Build du projet Next.js (`npm run build`)
-6. Installation du CLI Vercel
-7. Déploiement sur Vercel en production
-
-### Déclenchement
-
-Le workflow se lance automatiquement à chaque push sur la branche `main`.
+- 🎵 Une **marketplace complète** de beats
+- 🛠️ Une suite de **services IA** (mastering, covers)
+- 🌍 La **distribution digitale** avec Believe
+- 🛍️ Des **boutiques Pro (Pro Pages)** à venir pour chaque beatmaker
 
 ---
 
-**Astuce** : Pour tester le déploiement, faites une modification et poussez-la sur `main`.  
-Les logs sont visibles dans l’onglet **Actions** de GitHub.
+## 🚀 Fonctionnalités clés
+
+- Vente de beats avec plusieurs types de licences (Basique, Premium, Exclusive, Exclusive + Stems)
+- Abonnements pour beatmakers avec avantages (mise en avant, accès IA, commissions réduites)
+- Services IA intégrés :
+  - Mastering automatique
+  - Génération de covers
+  - Distribution en un clic
+- Espace personnel pour gérer ses beats, abonnements, ventes
+- Administration complète du site avec outils no-code
+- (À venir) **Mini-boutique personnalisable (Pro Page)** pour chaque beatmaker
 
 ---
-
-*Merci de garder les tokens secrets et de ne pas les exposer publiquement.*

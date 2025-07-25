@@ -1,74 +1,48 @@
-"use client";
-
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-interface Beat {
-  id: string;
-  title: string;
-  price: number;
-  licenses: string[];
-  coverUrl?: string;
-  status: "published" | "draft" | "archived";
-}
-
 interface BeatCardProps {
-  beat: Beat;
+  beat: {
+    id: string;
+    title: string;
+    price: number;
+    licenses: string[];
+    coverUrl?: string;
+    status: "published" | "draft" | "archived";
+  };
 }
 
 export function BeatCard({ beat }: BeatCardProps) {
-  const handleEdit = () => {
-    alert(`Modifier l'instrumentale: ${beat.title}`);
-  };
-
-  const handleDelete = () => {
-    alert(`Supprimer l'instrumentale: ${beat.title}`);
-  };
-
-  const statusColor = {
-    published: "bg-green-200 text-green-800",
-    draft: "bg-yellow-200 text-yellow-800",
-    archived: "bg-gray-300 text-gray-600",
-  };
-
   return (
-    <div className="border rounded-lg overflow-hidden shadow-sm">
-      {beat.coverUrl && (
-        <img
-          src={beat.coverUrl}
-          alt={`Cover de ${beat.title}`}
-          className="w-full h-48 object-cover"
-        />
-      )}
-      <div className="p-4">
-        <h2 className="text-lg font-semibold">{beat.title}</h2>
-        <p className="mt-1 text-sm text-gray-600">Prix: {beat.price} €</p>
-        <div className="mt-2 space-x-1">
-          {beat.licenses.map((license) => (
-            <Badge key={license} variant="secondary">
-              {license}
+    <div className="border rounded-lg shadow-md overflow-hidden flex flex-col">
+      <img
+        src={beat.coverUrl || "/images/default-beat-cover.jpg"}
+        alt={`Cover de ${beat.title}`}
+        className="w-full h-48 object-cover"
+      />
+      <div className="p-4 flex flex-col flex-grow">
+        <h2 className="text-lg font-semibold mb-2">{beat.title}</h2>
+        <p className="mb-2 text-sm text-gray-600">
+          Prix à partir de <strong>{beat.price}€</strong>
+        </p>
+        <div className="flex flex-wrap gap-1 mb-4">
+          {beat.licenses.map((lic) => (
+            <Badge key={lic} variant="outline">
+              {lic}
             </Badge>
           ))}
         </div>
-        <div className="mt-3 flex justify-between items-center">
-          <span
-            className={`px-2 py-1 rounded text-xs font-semibold ${statusColor[beat.status]}`}
-          >
-            {beat.status.charAt(0).toUpperCase() + beat.status.slice(1)}
-          </span>
-          <div className="space-x-2">
-            <Button size="sm" variant="outline" onClick={handleEdit}>
-              Modifier
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={handleDelete}
-            >
-              Supprimer
-            </Button>
-          </div>
+        <div className="mt-auto flex space-x-2">
+          <Button variant="outline" size="sm">
+            Modifier
+          </Button>
+          <Button variant="destructive" size="sm">
+            Supprimer
+          </Button>
+          <Button size="sm">
+            {beat.status === "published" ? "Dépublier" : "Publier"}
+          </Button>
         </div>
       </div>
     </div>

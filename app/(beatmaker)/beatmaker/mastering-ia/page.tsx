@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { MasteringTool } from './_components/MasteringTool'
+import { MasteringForm } from './_components/MasteringForm'
 
 export default function MasteringIAPage() {
   return (
@@ -11,7 +11,7 @@ export default function MasteringIAPage() {
         </CardHeader>
         <Separator />
         <CardContent>
-          <MasteringTool />
+          <MasteringForm />
         </CardContent>
       </Card>
     </div>

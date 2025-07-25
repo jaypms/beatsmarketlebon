@@ -6,7 +6,7 @@ interface Beat {
   title: string;
   price: number;
   licenses: string[];
-  status: string;
+  status: "active" | "inactive";
 }
 
 interface BeatCardProps {
@@ -15,22 +15,22 @@ interface BeatCardProps {
   onDelete: () => void;
 }
 
-export const BeatCard: React.FC<BeatCardProps> = ({ beat, onEdit, onDelete }) => {
+export function BeatCard({ beat, onEdit, onDelete }: BeatCardProps) {
   return (
-    <div className="border rounded-lg p-4 shadow hover:shadow-lg transition duration-200 bg-white dark:bg-gray-800">
+    <div className="border rounded-lg p-4 shadow hover:shadow-lg transition">
       <h2 className="text-xl font-semibold mb-2">{beat.title}</h2>
-      <p className="mb-2">Prix de base : {beat.price} €</p>
-      <p className="mb-2">
-        Licences proposées : {beat.licenses.join(", ")}
+      <p className="mb-2">Prix : {beat.price} €</p>
+      <p className="mb-4">
+        Licences disponibles : {beat.licenses.join(", ")}
       </p>
       <p
-        className={`mb-4 font-medium ${
+        className={`mb-4 font-semibold ${
           beat.status === "active" ? "text-green-600" : "text-red-600"
         }`}
       >
-        Statut : {beat.status === "active" ? "Actif" : "Inactif"}
+        Statut : {beat.status}
       </p>
-      <div className="flex space-x-2">
+      <div className="flex space-x-4">
         <Button variant="outline" onClick={onEdit}>
           Modifier
         </Button>
@@ -40,4 +40,4 @@ export const BeatCard: React.FC<BeatCardProps> = ({ beat, onEdit, onDelete }) =>
       </div>
     </div>
   );
-};
+}

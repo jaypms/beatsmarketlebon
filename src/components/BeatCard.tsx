@@ -1,5 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 interface BeatCardProps {
   id: string;
@@ -8,11 +9,11 @@ interface BeatCardProps {
   licenses: string[];
   coverUrl?: string;
   status: "actif" | "suspendu";
-  onEdit: (id: string) => void;
+  onEdit: (beat: { id: string; title: string; price: number; licenses: string[]; coverUrl?: string; status: "actif" | "suspendu" }) => void;
   onDelete: (id: string) => void;
 }
 
-export const BeatCard: React.FC<BeatCardProps> = ({
+export function BeatCard({
   id,
   title,
   price,
@@ -21,27 +22,43 @@ export const BeatCard: React.FC<BeatCardProps> = ({
   status,
   onEdit,
   onDelete,
-}) => {
+}: BeatCardProps) {
   return (
-    <div className={`beat-card p-4 border rounded-md shadow-md ${status === "suspendu" ? "opacity-50" : ""}`}>
+    <div className="border rounded-md p-4 shadow-md bg-white dark:bg-gray-800">
       <img
-        src={coverUrl || "/images/default-cover.jpg"}
-        alt={`Cover du beat ${title}`}
-        className="w-full h-48 object-cover rounded"
+        src={coverUrl || "/images/default-beat-cover.jpg"}
+        alt={`Cover de ${title}`}
+        className="w-full h-40 object-cover rounded-md mb-3"
       />
-      <h3 className="mt-2 font-semibold text-lg">{title}</h3>
-      <p className="text-sm text-gray-500">Prix : {price} €</p>
-      <p className="text-sm text-gray-600">
-        Licences : {licenses.join(", ")}
-      </p>
-      <div className="mt-3 flex justify-between">
-        <Button variant="outline" onClick={() => onEdit(id)}>
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="mb-2">Prix : {price} €</p>
+      <div className="mb-2">
+        {licenses.map((lic) => (
+          <Badge key={lic} variant="secondary" className="mr-2">
+            {lic}
+          </Badge>
+        ))}
+      </div>
+      <Badge
+        variant={status === "actif" ? "success" : "destructive"}
+        className="mb-3"
+      >
+        {status === "actif" ? "Actif" : "Suspendu"}
+      </Badge>
+      <div className="flex justify-between">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            onEdit({ id, title, price, licenses, coverUrl, status })
+          }
+        >
           Modifier
         </Button>
-        <Button variant="destructive" onClick={() => onDelete(id)}>
+        <Button size="sm" variant="destructive" onClick={() => onDelete(id)}>
           Supprimer
         </Button>
       </div>
     </div>
   );
-};
+}

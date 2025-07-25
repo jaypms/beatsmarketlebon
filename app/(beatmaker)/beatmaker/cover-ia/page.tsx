@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { CoverTool } from './_components/CoverTool'
+import { CoverGenerator } from './_components/CoverGenerator'
 
 export default function CoverIAPage() {
   return (
@@ -11,7 +11,7 @@ export default function CoverIAPage() {
         </CardHeader>
         <Separator />
         <CardContent>
-          <CoverTool />
+          <CoverGenerator />
         </CardContent>
       </Card>
     </div>

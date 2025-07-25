@@ -2,117 +2,148 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@/components/ui/table";
+import { Table } from "@/components/ui/table"; // Supposons qu’on ait un composant Table
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import BeatForm from "@/components/BeatForm";
 
-type LicenseType = "basique" | "premium" | "exclusive" | "exclusive_stems";
-
-interface Beat {
+type Beat = {
   id: string;
   title: string;
   bpm: number;
   key: string;
-  licenses: LicenseType[];
-  status: "visible" | "masqué" | "brouillon";
-  priceBasique?: number;
-  pricePremium?: number;
-  priceExclusive?: number;
-  priceExclusiveStems?: number;
-}
+  priceBasic: number;
+  pricePremium: number;
+  priceExclusive: number;
+  status: "actif" | "suspendu" | "brouillon";
+  createdAt: string;
+};
 
 export default function BeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([]);
+  const [openForm, setOpenForm] = useState(false);
+  const [editBeat, setEditBeat] = useState<Beat | null>(null);
 
   useEffect(() => {
-    // Fetch beats from API or mock data
-    const fetchedBeats: Beat[] = [
+    // Charger les beats depuis l’API
+    setBeats([
       {
         id: "1",
-        title: "Summer Vibes",
+        title: "Beat Hip Hop",
         bpm: 90,
         key: "Am",
-        licenses: ["basique", "premium", "exclusive"],
-        status: "visible",
-        priceBasique: 29,
-        pricePremium: 49,
-        priceExclusive: 199,
+        priceBasic: 15,
+        pricePremium: 30,
+        priceExclusive: 150,
+        status: "actif",
+        createdAt: "2025-07-24",
       },
-      {
-        id: "2",
-        title: "Night Drive",
-        bpm: 75,
-        key: "Cm",
-        licenses: ["basique", "premium"],
-        status: "brouillon",
-        priceBasique: 19,
-        pricePremium: 39,
-      },
-    ];
-    setBeats(fetchedBeats);
+      // autres beats...
+    ]);
   }, []);
 
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "visible":
-        return "bg-green-100 text-green-800";
-      case "masqué":
-        return "bg-gray-100 text-gray-800";
-      case "brouillon":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "";
+  function openEditModal(beat: Beat) {
+    setEditBeat(beat);
+    setOpenForm(true);
+  }
+
+  function openAddModal() {
+    setEditBeat(null);
+    setOpenForm(true);
+  }
+
+  function deleteBeat(id: string) {
+    if (confirm("Voulez-vous vraiment supprimer ce beat ?")) {
+      setBeats((prev) => prev.filter((b) => b.id !== id));
+      // Appeler API pour supprimer
     }
-  };
+  }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-white dark:bg-gray-900 rounded shadow">
-      <h1 className="text-2xl font-bold mb-6">Gestion des Instrumentales</h1>
-      <Button className="mb-4">Ajouter une Instrumentale</Button>
+    <div className="p-6 max-w-5xl mx-auto bg-white dark:bg-gray-900 rounded shadow">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Gestion des Beats</h1>
+        <Button onClick={openAddModal}>Ajouter un beat</Button>
+      </div>
+
       <Table>
-        <Thead>
-          <Tr>
-            <Th>Titre</Th>
-            <Th>BPM</Th>
-            <Th>Ton</Th>
-            <Th>Licences</Th>
-            <Th>Statut</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>BPM</th>
+            <th>Ton</th>
+            <th>Prix Basic (€)</th>
+            <th>Prix Premium (€)</th>
+            <th>Prix Exclusive (€)</th>
+            <th>Status</th>
+            <th>Créé le</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {beats.map((beat) => (
-            <Tr key={beat.id}>
-              <Td>{beat.title}</Td>
-              <Td>{beat.bpm}</Td>
-              <Td>{beat.key}</Td>
-              <Td>
-                {beat.licenses.map((lic) => (
-                  <Badge
-                    key={lic}
-                    className="mr-1"
-                    variant="outline"
-                  >
-                    {lic.charAt(0).toUpperCase() + lic.slice(1)}
-                  </Badge>
-                ))}
-              </Td>
-              <Td>
-                <span className={`px-2 py-1 rounded ${statusColor(beat.status)}`}>
-                  {beat.status.charAt(0).toUpperCase() + beat.status.slice(1)}
-                </span>
-              </Td>
-              <Td>
-                <Button variant="ghost" size="sm" className="mr-2">
+            <tr key={beat.id}>
+              <td>{beat.title}</td>
+              <td>{beat.bpm}</td>
+              <td>{beat.key}</td>
+              <td>{beat.priceBasic.toFixed(2)}</td>
+              <td>{beat.pricePremium.toFixed(2)}</td>
+              <td>{beat.priceExclusive.toFixed(2)}</td>
+              <td>
+                <Badge
+                  variant={
+                    beat.status === "actif"
+                      ? "success"
+                      : beat.status === "suspendu"
+                      ? "warning"
+                      : "secondary"
+                  }
+                >
+                  {beat.status}
+                </Badge>
+              </td>
+              <td>{beat.createdAt}</td>
+              <td className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openEditModal(beat)}
+                >
                   Modifier
                 </Button>
-                <Button variant="destructive" size="sm">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteBeat(beat.id)}
+                >
                   Supprimer
                 </Button>
-              </Td>
-            </Tr>
+              </td>
+            </tr>
           ))}
-        </Tbody>
+        </tbody>
       </Table>
+
+      <Dialog open={openForm} onOpenChange={setOpenForm}>
+        <DialogTrigger />
+        <DialogContent>
+          <BeatForm
+            beat={editBeat}
+            onClose={() => setOpenForm(false)}
+            onSave={(updatedBeat) => {
+              setBeats((prev) => {
+                if (editBeat) {
+                  return prev.map((b) =>
+                    b.id === updatedBeat.id ? updatedBeat : b
+                  );
+                }
+                return [...prev, updatedBeat];
+              });
+              setOpenForm(false);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -4,68 +4,78 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
-type Beat = {
+type LicenseType = "basique" | "premium" | "exclusive" | "exclusive_stems";
+
+interface Beat {
   id: string;
   title: string;
-  priceBasic: number;
-  pricePremium: number;
-  priceExclusive: number;
-  status: "active" | "inactive" | "draft";
-  createdAt: string;
-};
+  bpm: number;
+  key: string;
+  licenses: LicenseType[];
+  status: "visible" | "masqué" | "brouillon";
+  priceBasique?: number;
+  pricePremium?: number;
+  priceExclusive?: number;
+  priceExclusiveStems?: number;
+}
 
 export default function BeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([]);
 
   useEffect(() => {
-    // Fetch beats from API
-    const fetchBeats = async () => {
-      // Stub data for demo
-      const data: Beat[] = [
-        {
-          id: "1",
-          title: "Trap Beat 2025",
-          priceBasic: 30,
-          pricePremium: 50,
-          priceExclusive: 200,
-          status: "active",
-          createdAt: "2025-07-20",
-        },
-        {
-          id: "2",
-          title: "Lo-fi Chill Vibes",
-          priceBasic: 15,
-          pricePremium: 25,
-          priceExclusive: 150,
-          status: "draft",
-          createdAt: "2025-07-21",
-        },
-      ];
-      setBeats(data);
-    };
-    fetchBeats();
+    // Fetch beats from API or mock data
+    const fetchedBeats: Beat[] = [
+      {
+        id: "1",
+        title: "Summer Vibes",
+        bpm: 90,
+        key: "Am",
+        licenses: ["basique", "premium", "exclusive"],
+        status: "visible",
+        priceBasique: 29,
+        pricePremium: 49,
+        priceExclusive: 199,
+      },
+      {
+        id: "2",
+        title: "Night Drive",
+        bpm: 75,
+        key: "Cm",
+        licenses: ["basique", "premium"],
+        status: "brouillon",
+        priceBasique: 19,
+        pricePremium: 39,
+      },
+    ];
+    setBeats(fetchedBeats);
   }, []);
 
-  return (
-    <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-900 rounded shadow">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Mes Beats</h1>
-        <Link href="/beatmaker/beats/add">
-          <Button>Ajouter un Beat</Button>
-        </Link>
-      </div>
+  const statusColor = (status: string) => {
+    switch (status) {
+      case "visible":
+        return "bg-green-100 text-green-800";
+      case "masqué":
+        return "bg-gray-100 text-gray-800";
+      case "brouillon":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "";
+    }
+  };
 
+  return (
+    <div className="p-6 max-w-6xl mx-auto bg-white dark:bg-gray-900 rounded shadow">
+      <h1 className="text-2xl font-bold mb-6">Gestion des Instrumentales</h1>
+      <Button className="mb-4">Ajouter une Instrumentale</Button>
       <Table>
         <Thead>
           <Tr>
             <Th>Titre</Th>
-            <Th>Prix Basic (€)</Th>
-            <Th>Prix Premium (€)</Th>
-            <Th>Prix Exclusive (€)</Th>
+            <Th>BPM</Th>
+            <Th>Ton</Th>
+            <Th>Licences</Th>
             <Th>Statut</Th>
-            <Th>Créé le</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
@@ -73,34 +83,29 @@ export default function BeatsPage() {
           {beats.map((beat) => (
             <Tr key={beat.id}>
               <Td>{beat.title}</Td>
-              <Td>{beat.priceBasic}</Td>
-              <Td>{beat.pricePremium}</Td>
-              <Td>{beat.priceExclusive}</Td>
+              <Td>{beat.bpm}</Td>
+              <Td>{beat.key}</Td>
               <Td>
-                <Badge
-                  variant={
-                    beat.status === "active"
-                      ? "success"
-                      : beat.status === "draft"
-                      ? "secondary"
-                      : "destructive"
-                  }
-                >
-                  {beat.status === "active"
-                    ? "Actif"
-                    : beat.status === "draft"
-                    ? "Brouillon"
-                    : "Inactif"}
-                </Badge>
+                {beat.licenses.map((lic) => (
+                  <Badge
+                    key={lic}
+                    className="mr-1"
+                    variant="outline"
+                  >
+                    {lic.charAt(0).toUpperCase() + lic.slice(1)}
+                  </Badge>
+                ))}
               </Td>
-              <Td>{new Date(beat.createdAt).toLocaleDateString("fr-FR")}</Td>
               <Td>
-                <Link href={`/beatmaker/beats/edit/${beat.id}`}>
-                  <Button size="sm" variant="outline" className="mr-2">
-                    Modifier
-                  </Button>
-                </Link>
-                <Button size="sm" variant="destructive">
+                <span className={`px-2 py-1 rounded ${statusColor(beat.status)}`}>
+                  {beat.status.charAt(0).toUpperCase() + beat.status.slice(1)}
+                </span>
+              </Td>
+              <Td>
+                <Button variant="ghost" size="sm" className="mr-2">
+                  Modifier
+                </Button>
+                <Button variant="destructive" size="sm">
                   Supprimer
                 </Button>
               </Td>

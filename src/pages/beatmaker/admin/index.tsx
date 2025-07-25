@@ -1,81 +1,83 @@
 import React, { useState, useEffect } from "react";
 import { BeatCard } from "../../../components/BeatCard";
-import { Button } from "../../../components/ui/button";
-import { Modal } from "../../../components/ui/modal";
 import { BeatForm } from "../../../components/BeatForm";
+import { Button } from "../../../components/ui/button";
 
-interface Beat {
-  id: string;
-  title: string;
-  price: number;
-  licenses: string[];
-  coverUrl?: string;
-  status: "actif" | "suspendu";
-}
-
-export default function BeatmakerAdmin() {
-  const [beats, setBeats] = useState<Beat[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingBeat, setEditingBeat] = useState<Beat | null>(null);
+export default function AdminBeatmakerPage() {
+  const [beats, setBeats] = useState<Array<any>>([]);
+  const [editingBeat, setEditingBeat] = useState<any | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
-    // Charger les beats depuis une API ou localStorage ici
+    // TODO: fetch beats from API
+    setBeats([
+      {
+        id: "1",
+        title: "Beat 1",
+        price: 29.99,
+        licenses: ["Basique MP3", "Premium WAV"],
+        status: "actif",
+      },
+      {
+        id: "2",
+        title: "Beat 2",
+        price: 49.99,
+        licenses: ["Exclusive"],
+        status: "suspendu",
+      },
+    ]);
   }, []);
 
-  const openAddModal = () => {
+  const handleAddClick = () => {
     setEditingBeat(null);
-    setModalOpen(true);
+    setIsFormOpen(true);
   };
 
-  const openEditModal = (beat: Beat) => {
+  const handleEditClick = (beat: any) => {
     setEditingBeat(beat);
-    setModalOpen(true);
+    setIsFormOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const handleDeleteClick = (id: string) => {
+    if (window.confirm("Voulez-vous vraiment supprimer ce beat ?")) {
+      setBeats(beats.filter((b) => b.id !== id));
+    }
   };
 
-  const handleSaveBeat = (beat: Beat) => {
-    setBeats((prev) => {
-      const exists = prev.find((b) => b.id === beat.id);
-      if (exists) {
-        return prev.map((b) => (b.id === beat.id ? beat : b));
-      } else {
-        return [...prev, beat];
-      }
-    });
-    closeModal();
+  const handleSave = (beat: any) => {
+    if (editingBeat) {
+      setBeats(beats.map((b) => (b.id === beat.id ? beat : b)));
+    } else {
+      setBeats([...beats, beat]);
+    }
+    setIsFormOpen(false);
   };
 
-  const handleDeleteBeat = (id: string) => {
-    setBeats((prev) => prev.filter((b) => b.id !== id));
+  const handleCancel = () => {
+    setIsFormOpen(false);
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Gestion des Beats</h1>
-      <Button onClick={openAddModal} className="mb-6">
-        Ajouter un Beat
+      <Button onClick={handleAddClick} className="mb-4">
+        Ajouter un beat
       </Button>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      {isFormOpen && (
+        <BeatForm beat={editingBeat} onSave={handleSave} onCancel={handleCancel} />
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {beats.map((beat) => (
           <BeatCard
             key={beat.id}
-            {...beat}
-            onEdit={openEditModal}
-            onDelete={handleDeleteBeat}
+            beat={beat}
+            onEdit={() => handleEditClick(beat)}
+            onDelete={() => handleDeleteClick(beat.id)}
           />
         ))}
       </div>
-
-      <Modal isOpen={modalOpen} onClose={closeModal}>
-        <BeatForm
-          beat={editingBeat}
-          onSave={handleSaveBeat}
-          onCancel={closeModal}
-        />
-      </Modal>
     </div>
   );
 }

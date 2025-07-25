@@ -3,72 +3,55 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 export function MasteringForm() {
-  const [audioFile, setAudioFile] = useState<File | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [masteredUrl, setMasteredUrl] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [processing, setProcessing] = useState(false)
+  const [resultUrl, setResultUrl] = useState<string | null>(null)
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files && e.target.files[0]) {
-      setAudioFile(e.target.files[0])
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0])
+      setResultUrl(null)
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!audioFile) return
-
-    setLoading(true)
-    setError(null)
-    setMasteredUrl(null)
-
+  const handleSubmit = async () => {
+    if (!file) return
+    setProcessing(true)
     try {
-      const formData = new FormData()
-      formData.append('audio', audioFile)
-
-      const response = await fetch('/api/ai/mastering', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Erreur lors du mastering')
-      }
-
-      const data = await response.json()
-      setMasteredUrl(data.masteredUrl)
-    } catch (err: any) {
-      setError(err.message || 'Erreur inconnue')
+      // Simuler appel API mastering IA
+      await new Promise((r) => setTimeout(r, 3000))
+      // Ici on aurait l'url du fichier masterisé
+      setResultUrl('/downloads/mastered-sample.mp3')
+    } catch (error) {
+      alert('Erreur lors du mastering, veuillez réessayer.')
     } finally {
-      setLoading(false)
+      setProcessing(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="audio" className="block mb-2 font-medium">
-          Fichier audio à masteriser
-        </label>
-        <Input
-          type="file"
-          id="audio"
-          accept="audio/*"
-          onChange={handleFileChange}
-          required
-        />
-      </div>
-
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Mastering en cours...' : 'Lancer le mastering'}
+    <form
+      onSubmit={e => {
+        e.preventDefault()
+        handleSubmit()
+      }}
+      className="space-y-4 max-w-lg"
+    >
+      <Input
+        type="file"
+        accept=".mp3,.wav"
+        onChange={handleFileChange}
+        disabled={processing}
+        required
+      />
+      <Button type="submit" disabled={!file || processing}>
+        {processing ? 'Traitement...' : 'Lancer le mastering'}
       </Button>
-
-      {error && <p className="text-red-500">{error}</p>}
-
-      {masteredUrl && (
-        <div className="mt-6 text-center">
-          <audio controls src={masteredUrl} className="mx-auto" />
-          <p className="mt-2 text-sm text-gray-600">Mastering terminé</p>
+      {resultUrl && (
+        <div className="mt-4">
+          <a href={resultUrl} download className="text-blue-500 underline">
+            Télécharger le fichier masterisé
+          </a>
         </div>
       )}
     </form>

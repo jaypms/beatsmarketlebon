@@ -1,78 +1,61 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { toast } from 'react-hot-toast'
+import { Textarea } from '@/components/ui/textarea'
 
 export function CoverForm() {
-  const [title, setTitle] = useState('')
-  const [file, setFile] = useState<File | null>(null)
+  const [prompt, setPrompt] = useState('')
   const [loading, setLoading] = useState(false)
-
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files?.length) {
-      const selectedFile = e.target.files[0]
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        toast.error('Le fichier image dépasse la taille maximale de 10 Mo.')
-        return
-      }
-      setFile(selectedFile)
-    }
-  }
+  const [resultUrl, setResultUrl] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!title.trim()) {
-      toast.error('Veuillez saisir un titre.')
-      return
-    }
-    if (!file) {
-      toast.error('Veuillez sélectionner un fichier image.')
-      return
-    }
     setLoading(true)
+    setError(null)
+    setResultUrl(null)
+
     try {
-      // Appeler API backend pour générer cover IA
-      await new Promise((res) => setTimeout(res, 2000)) // Simuler délai
-      toast.success('Cover généré avec succès !')
-      setTitle('')
-      setFile(null)
-    } catch {
-      toast.error('Erreur lors de la génération du cover.')
+      const response = await fetch('/api/cover-ia/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la génération de la cover')
+      }
+
+      const data = await response.json()
+      setResultUrl(data.imageUrl)
+    } catch (err) {
+      setError((err as Error).message)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      <div>
-        <Label htmlFor="title">Titre de l'instrumentale</Label>
-        <Input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          disabled={loading}
-          required
-          placeholder="Titre de votre beat"
-        />
-      </div>
-      <div>
-        <Label htmlFor="file">Image de base (facultatif)</Label>
-        <Input
-          type="file"
-          id="file"
-          accept="image/png, image/jpeg"
-          onChange={handleFileChange}
-          disabled={loading}
-        />
-      </div>
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Génération en cours...' : 'Générer le cover IA'}
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-4">
+      <Textarea
+        placeholder="Décris le style et les éléments de ta pochette (ex : ambiance urbaine, nuit, néons)"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        rows={4}
+        required
+      />
+      <Button type="submit" disabled={loading || prompt.trim() === ''}>
+        {loading ? 'Génération en cours...' : 'Générer la pochette'}
       </Button>
+      {error && <p className="text-red-500">{error}</p>}
+      {resultUrl && (
+        <div className="mt-6">
+          <p className="mb-2">Voici ta pochette générée :</p>
+          <img src={resultUrl} alt="Cover IA générée" className="mx-auto rounded shadow-md" />
+        </div>
+      )}
     </form>
   )
 }
